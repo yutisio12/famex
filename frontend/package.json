@@ -1,0 +1,57 @@
+{
+  "name": "famex",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/server": "^11.11.0",
+    "@mantine/core": "^5.10.0",
+    "@mantine/dates": "^5.10.0",
+    "@mantine/form": "^5.10.0",
+    "@mantine/hooks": "^5.10.0",
+    "@mantine/notifications": "^5.10.0",
+    "@tabler/icons-react": "^2.47.0",
+    "@tanstack/react-table": "^8.21.3",
+    "axios": "^1.6.2",
+    "face-api.js": "^0.21.0",
+    "ogl": "^1.0.11",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1",
+    "react-scripts": "5.0.1",
+    "recharts": "^2.8.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "dev": "cross-env HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.22",
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.11",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  }
+}

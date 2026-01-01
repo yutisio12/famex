@@ -1,0 +1,61 @@
+// src/AppRouter.jsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Expenses from './pages/Expenses';
+import Profile from './pages/Profile';
+import Layout from './components/layout/Layout';
+
+function AppRouter() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        Loading...
+      </div>
+    );
+  }
+
+  // Protected Layout Component
+  const ProtectedLayout = () => {
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+    return (
+      <Layout>
+        <Outlet />
+      </Layout>
+    );
+  };
+
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/login"
+          element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
+        />
+
+        <Route path="/" element={<ProtectedLayout />}>
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="expenses" element={<Expenses />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default AppRouter;
