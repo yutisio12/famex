@@ -127,7 +127,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
 
           <Group position="right">
             <Button type="submit" loading={loading}>
-              Update
+              Save
             </Button>
           </Group>
 
