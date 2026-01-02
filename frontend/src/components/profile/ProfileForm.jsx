@@ -26,11 +26,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
       role: 2,
       username: '',
     },
-    // validate: {
-    //   amount: (value) => (value <= 0 ? 'Jumlah harus lebih dari 0' : null),
-    //   description: (value) => (value.length < 3 ? 'Deskripsi terlalu pendek' : null),
-    //   category_id: (value) => (!value ? 'Pilih kategori' : null),
-    // },
+    
   });
 
   useEffect(() => {
@@ -58,13 +54,6 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
       const payloadUpdate = {
         name: item.name,
       };
-
-      // await expensesService.update(editData.id, payloadUpdate);
-      // showNotification({
-      //   title: 'Sukses',
-      //   message: 'Pengeluaran berhasil diupdate',
-      //   color: 'green',
-      // });
 
       onSuccess?.();
     } catch (error) {
