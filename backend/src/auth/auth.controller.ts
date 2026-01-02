@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Res, HttpStatus, UseGuards, Get, Req, NotFoundException } from "@nestjs/common";
+import { Controller, Post, Body, Res, HttpStatus, UseGuards, Get, Req, NotFoundException, Patch } from "@nestjs/common";
 import type { Response, Request } from "express";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { LoginDto } from "./dto/login.dto";
+import { User } from "../entities/user.auth.entity";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiCookieAuth, ApiBody } from "@nestjs/swagger";
 
 @ApiTags('Authentication')
@@ -112,4 +113,13 @@ export class AuthController{
     return result
   }
 
+  @Patch('update_profile')
+  async update_profile( @Req() req, @Body() body, ){
+    const formDatas: Partial<User> = {
+      name: body.name,
+    };
+    const profile = await this.authService.updateUserByUser({id: req.user.id, formDatas})
+    
+    return
+  }
 }
