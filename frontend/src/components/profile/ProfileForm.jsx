@@ -67,7 +67,6 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
         color: 'red',
       });
     }
-
     setLoading(false);
   };
 
