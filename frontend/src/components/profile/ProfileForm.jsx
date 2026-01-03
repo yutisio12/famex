@@ -12,7 +12,7 @@ import {
 import { DatePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { expensesService } from '../../services/expenses';
+import { authService } from '../../services/auth';
 import { IconCamera, IconUpload } from '@tabler/icons-react';
 
 const ProfileForm = ({ onSuccess, editData, setModal }) => {
@@ -59,12 +59,12 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
         name: item.name,
       };
 
-      // await expensesService.update(editData.id, payloadUpdate);
-      // showNotification({
-      //   title: 'Sukses',
-      //   message: 'Pengeluaran berhasil diupdate',
-      //   color: 'green',
-      // });
+      await authService.update_profile(payloadUpdate);
+      showNotification({
+        title: 'Sukses',
+        message: 'Profil berhasil diupdate',
+        color: 'green',
+      });
 
       onSuccess?.();
     } catch (error) {
@@ -140,7 +140,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
           </Group>
 
           <Group position="right">
-            <Button type="submit" loading={loading}>
+            <Button type="submit" loading={loading} onClick={handleSubmit}>
               Update
             </Button>
           </Group>

@@ -14,7 +14,6 @@ const Profile = () => {
   }, []);
 
   const loadMyProfile = async () => {
-    console.log("loadMyProfile");
     try {
       const data = await authService.profile();
       setEditData(data)

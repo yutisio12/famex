@@ -14,6 +14,11 @@ export const authService = {
   profile: async () => {
     const response = await api.get('/auth/profile')
     return response.data
+  },
+
+  update_profile: async (formData) => {
+    const response = await api.patch('/auth/update_profile', formData)
+    return response.data
   }
 
 }

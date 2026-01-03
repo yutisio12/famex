@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpStatus, UseGuards, Get, Req, NotFoundException } from "@nestjs/common";
+import { Controller, Post, Body, Patch, Res, HttpStatus, UseGuards, Get, Req, NotFoundException } from "@nestjs/common";
 import type { Response, Request } from "express";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./jwt-auth.guard";
@@ -46,30 +46,30 @@ export class AuthController{
   @ApiResponse({ status: 201, description: 'User registered successfully' })
   @ApiResponse({ status: 409, description: 'Username or email already exists' })
   @ApiBody({
-  schema: {
-    type: 'object',
-    properties: {
-      username: {
-        type: 'string',
-        example: 'johndoe',
-        description: 'Username for login'
+    schema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          example: 'johndoe',
+          description: 'Username for login'
+        },
+        password: {
+          type: 'string',
+          example: 'password123',
+          description: 'Password for login',
+          minLength: 6
+        },
+        role: {
+          type: 'number',
+          example: 2,
+          description: 'User role (1: admin, 2: user)',
+          // required: false
+        }
       },
-      password: {
-        type: 'string',
-        example: 'password123',
-        description: 'Password for login',
-        minLength: 6
-      },
-      role: {
-        type: 'number',
-        example: 2,
-        description: 'User role (1: admin, 2: user)',
-        // required: false
-      }
-    },
-    required: ['username', 'password']
-  }
-})
+      required: ['username', 'password']
+    }
+  })
   async register(
     @Body() registerDto: { username: string, password: string, role?: number },
   ) {
@@ -110,6 +110,21 @@ export class AuthController{
     }
     const {id, password, ...result } = profile
     return result
+  }
+
+  @Patch('update_profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  async update_profile( @Req() req, @Body() updateDTO: { name: string, face_id?: string } ){
+    const profile = await this.authService.findOneCustom({id: req.user.id})
+
+    if (!profile) {
+      throw new NotFoundException('User not found');
+    }
+    
+    const updating = await this.authService.updateUserByUser(req.user.id, updateDTO)
+
+    return updating
   }
 
 }

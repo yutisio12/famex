@@ -99,6 +99,9 @@ export class AuthService {
     if(!user){
       throw new UnauthorizedException('User not found')
     }
+
+    // return formData // dont forget to comm
+
     Object.assign(user, formData);
     await this.userRepository.save(user)
     const encryptUserinfo = this.encryptionService.encryptObject({
