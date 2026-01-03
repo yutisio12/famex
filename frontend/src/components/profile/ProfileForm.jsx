@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {
   TextInput,
   Text,
-  NumberInput,
   Select,
   Button,
   Group,
   Box,
   FileButton,
 } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { authService } from '../../services/auth';
@@ -25,12 +23,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
       face_id: null,
       role: 2,
       username: '',
-    },
-    // validate: {
-    //   amount: (value) => (value <= 0 ? 'Jumlah harus lebih dari 0' : null),
-    //   description: (value) => (value.length < 3 ? 'Deskripsi terlalu pendek' : null),
-    //   category_id: (value) => (!value ? 'Pilih kategori' : null),
-    // },
+    }
   });
 
   useEffect(() => {
@@ -54,7 +47,6 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
         name: values.name,
       };
 
-      const payload = [item];
       const payloadUpdate = {
         name: item.name,
       };
