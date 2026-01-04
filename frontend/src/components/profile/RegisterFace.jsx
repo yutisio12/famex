@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { loadFaceModels } from '../../face/loadModels';
 import { getFaceDescriptor } from '../../face/getDescriptor';
 import { showNotification } from '@mantine/notifications';
+import { authService } from '../../services/auth';
 
 export default function RegisterFace() {
   const videoRef = useRef(null);
@@ -23,15 +24,10 @@ export default function RegisterFace() {
     try {
       setLoading(true);
       const descriptor = await getFaceDescriptor(videoRef);
-
-      await fetch('/api/auth/face/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ descriptor }),
-      });
+      const payloadUpdate = {
+        face_id: descriptor,
+      };
+      await authService.update_profile(payloadUpdate);
       showNotification({
         title: 'Success',
         message: 'Face Has Been Registered',

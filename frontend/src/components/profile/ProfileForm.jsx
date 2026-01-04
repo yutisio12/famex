@@ -74,20 +74,16 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
 
   const handleFileFace = async (uploadFile) => {
     const file = uploadFile
-    if(!file) return
-    
-    try{
+    if (!file) return
+
+    try {
       await loadFaceModels()
       const descriptor = await getFaceDescriptor(file, true)
 
-      await fetch('/api/auth/face/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ descriptor }),
-      });
+      const payloadUpdate = {
+        face_id: descriptor,
+      };
+      await authService.update_profile(payloadUpdate);
 
       showNotification({
         title: 'Success',
@@ -142,7 +138,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
             <TextInput
               label="Face ID"
               placeholder="Your Face ID"
-              {...form.getInputProps('face_id')}
+              value={form.values.face_id ? 'Yes' : 'No'}
               disabled
               sx={{ flex: 1 }}
             />
