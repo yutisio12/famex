@@ -12,6 +12,8 @@ import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { authService } from '../../services/auth';
 import { IconCamera, IconUpload } from '@tabler/icons-react';
+import { loadFaceModels } from '../../face/loadModels';
+import { getFaceDescriptor } from '../../face/getDescriptor';
 
 const ProfileForm = ({ onSuccess, editData, setModal }) => {
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
 
       await authService.update_profile(payloadUpdate);
       showNotification({
-        title: 'Sukses',
+        title: 'Success',
         message: 'Profil berhasil diupdate',
         color: 'green',
       });
@@ -69,6 +71,37 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
     }
     setLoading(false);
   };
+
+  const handleFileFace = async (uploadFile) => {
+    const file = uploadFile
+    if(!file) return
+    
+    try{
+      await loadFaceModels()
+      const descriptor = await getFaceDescriptor(file, true)
+
+      await fetch('/api/auth/face/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ descriptor }),
+      });
+
+      showNotification({
+        title: 'Success',
+        message: 'Face Has Been Registered',
+        color: 'green',
+      });
+    } catch (err) {
+      showNotification({
+        title: 'Error',
+        message: err.message,
+        color: 'red',
+      });
+    }
+  }
 
   return (
     <Box>
@@ -122,7 +155,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
               <IconCamera />
             </Button>
             <FileButton
-              // onChange={setFile} 
+              onChange={handleFileFace}
               accept="image/png,image/jpeg"
               variant="outline"
             >

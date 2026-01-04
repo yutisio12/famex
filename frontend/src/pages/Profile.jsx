@@ -36,9 +36,13 @@ const Profile = () => {
 
       <Modal
         opened={formModalOpen}
-        onClose={() => setFormModalOpen(false)}
+        onClose={() => {
+          setFormModalOpen(false); 
+          // stopCamera();
+        }}
         title="Tambah Wajah Baru"
         size="lg"
+        destroyOnClose
       >
         <RegisterFace />
       </Modal>

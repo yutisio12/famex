@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { loadFaceModels } from '../../face/loadModels';
 import { getFaceDescriptor } from '../../face/getDescriptor';
+import { showNotification } from '@mantine/notifications';
 
 export default function RegisterFace() {
   const videoRef = useRef(null);
@@ -31,10 +32,17 @@ export default function RegisterFace() {
         },
         body: JSON.stringify({ descriptor }),
       });
-
-      alert('Wajah berhasil didaftarkan');
+      showNotification({
+        title: 'Success',
+        message: 'Face Has Been Registered',
+        color: 'green',
+      });
     } catch (err) {
-      alert(err.message);
+      showNotification({
+        title: 'Error',
+        message: err.message,
+        color: 'red',
+      });
     } finally {
       setLoading(false);
     }
