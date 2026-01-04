@@ -46,13 +46,13 @@ export default function RegisterFace() {
 
   return (
     <div>
-      <h2>Daftarkan Wajah</h2>
+      <h2>Register Face</h2>
 
       <video ref={videoRef} autoPlay muted width="320" height="240" />
 
       <br />
       <button disabled={!ready || loading} onClick={handleRegister}>
-        Simpan Wajah
+        Save Face
       </button>
     </div>
   );

@@ -1,9 +1,8 @@
-// import React from "react";
 const Footer = () => {
   return (
-    <footer 
+    <footer
       style={{
-        backgroundColor: '#333',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         color: 'white',
         padding: '20px 0',
         marginTop: 'auto',
@@ -13,16 +12,16 @@ const Footer = () => {
         style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          // display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '0 20px',
           textAlign: 'center',
-        }} 
+        }}
       >
-        <p>&copy; 2025 Famex. All rights reserved.</p>
+        <p style={{ margin: 0 }}>&copy; 2025 Famex. All rights reserved.</p>
       </div>
     </footer>
   )
 }
-export default Footer
+
+export default Footer;

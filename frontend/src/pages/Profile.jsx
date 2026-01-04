@@ -20,7 +20,7 @@ const Profile = () => {
     } catch (error) {
       showNotification({
         title: 'Error',
-        message: 'Gagal memuat data pengeluaran',
+        message: 'Failed to load profile data',
         color: 'red',
       });
     }
@@ -37,10 +37,10 @@ const Profile = () => {
       <Modal
         opened={formModalOpen}
         onClose={() => {
-          setFormModalOpen(false); 
+          setFormModalOpen(false);
           // stopCamera();
         }}
-        title="Tambah Wajah Baru"
+        title="Register Face"
         size="lg"
         destroyOnClose
       >

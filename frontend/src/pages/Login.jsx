@@ -1,27 +1,20 @@
 import React from "react";
-import { Container, Paper } from "@mantine/core";
 import LoginForm from "../components/auth/LoginForm";
 
 const Login = () => {
   return (
-    <Container 
-      size="xs" 
-      style={{ 
-        height: '100vh', 
-        display: 'flex', 
-        alignItems: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-      }}
-    >
-      <Paper
-        shadow="xl"
-        p="xl" 
-        style={{ width: '100%' }}
-      >
-        <LoginForm/>
-      </Paper>
-    </Container>
-  )
-}
+    <div style={{
+      minHeight: '100vh',
+      // display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(to bottom, #f5f5f7 0%, #e8e8ed 100%)',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      // padding: '20px'
+    }}>
+      <LoginForm />
+    </div>
+  );
+};
 
-export default Login
+export default Login;

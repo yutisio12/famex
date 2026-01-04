@@ -56,7 +56,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
       await authService.update_profile(payloadUpdate);
       showNotification({
         title: 'Success',
-        message: 'Profil berhasil diupdate',
+        message: 'Profile has been updated',
         color: 'green',
       });
 
@@ -65,7 +65,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
       console.log("err:", error)
       showNotification({
         title: 'Error',
-        message: 'Terjadi kesalahan',
+        message: 'Failed to update profile',
         color: 'red',
       });
     }
@@ -161,7 +161,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
 
           <Group position="right">
             <Button type="submit" loading={loading} onClick={handleSubmit}>
-              Update
+              Save
             </Button>
           </Group>
 

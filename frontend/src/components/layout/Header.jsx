@@ -6,10 +6,10 @@ const Header = () => {
   const { user, logout } = useAuth();
 
   return (
-    <div style={{ 
-      height: '60px', 
-      display: 'flex', 
-      alignItems: 'center', 
+    <div style={{
+      height: '60px',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'space-between',
       padding: '0 16px',
       borderBottom: '1px solid #dee2e6'
@@ -17,7 +17,7 @@ const Header = () => {
       <Text size="xl" weight={700}>
         Famex
       </Text>
-      
+
       <Group>
         <Avatar color="blue" radius="xl">
           {user?.username?.charAt(0).toUpperCase()}

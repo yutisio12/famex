@@ -20,8 +20,8 @@ const Expenses = () => {
     <div>
       <Grid mb="xl">
         <Grid.Col span={6}>
-          <Title order={1}>Manajemen Pengeluaran</Title>
-          <Text color="dimmed">Kelola pemasukan dan pengeluaran keluarga</Text>
+          <Title order={1}>Expense Management</Title>
+          <Text color="dimmed">Manage family income and expenses</Text>
         </Grid.Col>
         <Grid.Col span={6} style={{ textAlign: 'right' }}>
           <Button
@@ -29,7 +29,7 @@ const Expenses = () => {
             onClick={() => setFormModalOpen(true)}
             size="md"
           >
-            Tambah Transaksi
+            Add New Transaction
           </Button>
         </Grid.Col>
       </Grid>
@@ -39,7 +39,7 @@ const Expenses = () => {
       <Modal
         opened={formModalOpen}
         onClose={() => setFormModalOpen(false)}
-        title="Tambah Transaksi Baru"
+        title="Add New Transaction"
         size="lg"
       >
         <ExpenseForm onSuccess={handleSuccess} />

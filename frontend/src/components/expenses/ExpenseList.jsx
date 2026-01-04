@@ -45,7 +45,7 @@ const ExpenseList = () => {
     } catch (error) {
       showNotification({
         title: 'Error',
-        message: 'Gagal memuat data pengeluaran',
+        message: 'Failed to load expense data',
         color: 'red',
       });
     } finally {
@@ -57,15 +57,15 @@ const ExpenseList = () => {
     try {
       await expensesService.delete(id);
       showNotification({
-        title: 'Sukses',
-        message: 'Pengeluaran berhasil dihapus',
+        title: 'Success',
+        message: 'Data Has Been Deleted',
         color: 'green',
       });
       loadExpenses();
     } catch (error) {
       showNotification({
         title: 'Error',
-        message: 'Gagal menghapus pengeluaran',
+        message: 'Failed to delete data',
         color: 'red',
       });
     }
@@ -80,7 +80,7 @@ const ExpenseList = () => {
     <tr key={expense.id}>
       <td>
         <Badge color={expense.type === 2 ? 'green' : 'red'}>
-          {expense.type === 2 ? 'Pemasukan' : 'Pengeluaran'}
+          {expense.type === 2 ? 'Income' : 'Expense'}
         </Badge>
       </td>
       <td>
@@ -111,7 +111,7 @@ const ExpenseList = () => {
   ));
 
   if (loading) {
-    return <Text>Memuat data...</Text>;
+    return <Text>Loading data...</Text>;
   }
 
   return (
@@ -119,9 +119,9 @@ const ExpenseList = () => {
       <ScrollArea>
         <Group position="apart" mb="xl">
           <Title order={1}>Dashboard</Title>
-          <Button 
+          <Button
             color='green'
-            leftIcon={<IconRefresh size="1rem" />} 
+            leftIcon={<IconRefresh size="1rem" />}
             onClick={loadExpenses}
             loading={loading}
           >
@@ -131,12 +131,12 @@ const ExpenseList = () => {
         <Table verticalSpacing="sm">
           <thead>
             <tr>
-              <th>Tipe</th>
-              <th>Kategori</th>
-              <th>Deskripsi</th>
-              <th>Jumlah</th>
-              <th>Tanggal</th>
-              <th>Aksi</th>
+              <th>Type</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>{rows}</tbody>
@@ -146,7 +146,7 @@ const ExpenseList = () => {
       <Modal
         opened={editModalOpen}
         onClose={() => setEditModalOpen(false)}
-        title="Edit Pengeluaran"
+        title="Modify Expense"
         size="lg"
       >
         <ExpenseForm

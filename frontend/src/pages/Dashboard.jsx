@@ -34,24 +34,24 @@ const Dashboard = () => {
     try {
       console.log('Loading dashboard data...');
       setLoading(true);
-      
+
       // Test API connection
       const expenses = await expensesService.getAll();
       console.log('Expenses data:', expenses);
 
       const incomeTransactions = expenses.filter(e => e.type === 2)
       const expenseTransactions = expenses.filter(e => e.type === 1)
-      
+
       const totalIncome = sumDecimals(incomeTransactions.map(e => e.amount))
       const totalExpenses = sumDecimals(expenseTransactions.map(e => e.amount))
-      
+
       setStats({
         totalIncome,
         totalExpenses,
         balance: totalIncome - totalExpenses,
         recentTransactions: expenses.slice(0, 5)
       });
-      
+
     } catch (error) {
       console.error('Error loading dashboard data:', error);
       // Set dummy data untuk testing
@@ -72,7 +72,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '50px' }}>
-        <Text size="xl">Memuat dashboard...</Text>
+        <Text size="xl">Loading dashboard...</Text>
       </div>
     );
   }
@@ -81,21 +81,21 @@ const Dashboard = () => {
     <div>
       <Group position="apart" mb="xl">
         <Title order={1}>Dashboard</Title>
-        <Button 
-          leftIcon={<IconRefresh size="1rem" />} 
+        <Button
+          leftIcon={<IconRefresh size="1rem" />}
           onClick={loadDashboardData}
           loading={loading}
         >
           Refresh
         </Button>
       </Group>
-      
+
       <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'md', cols: 1 }]} mb="xl">
         <Card shadow="sm" p="lg" radius="md">
           <Group position="apart">
             <div>
               <Text color="dimmed" size="xs" transform="uppercase" weight={700}>
-                Total Pemasukan
+                Total Income
               </Text>
               <Text size="xl" weight={700} color="green">
                 Rp {(stats.totalIncome.toLocaleString())}
@@ -109,7 +109,7 @@ const Dashboard = () => {
           <Group position="apart">
             <div>
               <Text color="dimmed" size="xs" transform="uppercase" weight={700}>
-                Total Pengeluaran
+                Total Expense
               </Text>
               <Text size="xl" weight={700} color="red">
                 Rp {(stats.totalExpenses.toLocaleString())}
@@ -123,10 +123,10 @@ const Dashboard = () => {
           <Group position="apart">
             <div>
               <Text color="dimmed" size="xs" transform="uppercase" weight={700}>
-                Saldo
+                Balance
               </Text>
-              <Text 
-                size="xl" 
+              <Text
+                size="xl"
                 weight={700}
                 color={stats.balance >= 0 ? 'green' : 'red'}
               >
@@ -138,10 +138,10 @@ const Dashboard = () => {
               roundCaps
               thickness={6}
               sections={[
-                { 
-                  value: stats.totalIncome > 0 ? 
-                    (stats.totalExpenses / stats.totalIncome) * 100 : 0, 
-                  color: stats.balance >= 0 ? 'green' : 'red' 
+                {
+                  value: stats.totalIncome > 0 ?
+                    (stats.totalExpenses / stats.totalIncome) * 100 : 0,
+                  color: stats.balance >= 0 ? 'green' : 'red'
                 }
               ]}
             />
@@ -152,13 +152,13 @@ const Dashboard = () => {
       <Grid>
         <Grid.Col span={8}>
           <Card shadow="sm" p="lg" radius="md">
-            <Title order={3} mb="md">Grafik Pengeluaran</Title>
+            <Title order={3} mb="md">Expense Chart</Title>
             <ExpenseChart />
           </Card>
         </Grid.Col>
         <Grid.Col span={4}>
           <Card shadow="sm" p="lg" radius="md">
-            <Title order={3} mb="md">Transaksi Terbaru</Title>
+            <Title order={3} mb="md">Recent Transactions</Title>
             {stats.recentTransactions.length > 0 ? (
               stats.recentTransactions.map((transaction) => (
                 <Group key={transaction.id} position="apart" mb="sm" p="xs" style={{ borderBottom: '1px solid #f0f0f0' }}>
@@ -168,18 +168,18 @@ const Dashboard = () => {
                       {new Date(transaction.expense_date).toLocaleDateString('id-ID')}
                     </Text>
                   </div>
-                  <Text 
-                    color={transaction.type === 2 ? 'green' : 'red'} 
+                  <Text
+                    color={transaction.type === 2 ? 'green' : 'red'}
                     weight={500}
                   >
-                    {transaction.type === 2 ? '+' : '-'} 
+                    {transaction.type === 2 ? '+' : '-'}
                     Rp {(transaction.amount?.toLocaleString())}
                   </Text>
                 </Group>
               ))
             ) : (
               <Text color="dimmed" align="center" py="md">
-                Tidak ada transaksi
+                No transactions found
               </Text>
             )}
           </Card>

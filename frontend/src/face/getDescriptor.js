@@ -14,7 +14,7 @@ export async function getFaceDescriptor(videoRef, isUpload = false) {
     .withFaceDescriptor();
 
   if (!detection) {
-    throw new Error('Wajah tidak terdeteksi');
+    throw new Error('No Face detected');
   }
 
   return Array.from(detection.descriptor);
