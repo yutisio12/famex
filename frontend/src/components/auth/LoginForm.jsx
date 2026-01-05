@@ -62,7 +62,7 @@ const LoginForm = () => {
       <div style={{
         position: 'absolute',
         inset: 0,
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #F8FAFC 0%, #EEF1F5 100%)',
         zIndex: 0
       }}>
         {/* Floating Shapes */}

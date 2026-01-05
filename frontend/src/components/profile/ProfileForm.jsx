@@ -145,7 +145,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
     <Box>
       <form onSubmit={form.onSubmit(handleSubmit)}>
 
-        <fieldset style={{ border: '1px solid #ccc', borderRadius: 8, padding: 16 }}>
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: 8, padding: 16, backgroundColor: '#FFFFFF' }}>
           <legend>
             <Text fw={500}>Profile</Text>
           </legend>
@@ -213,7 +213,7 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
       <br />
       <form onSubmit={formPassword.onSubmit(handleChangePassword)}>
 
-        <fieldset style={{ border: '1px solid #ccc', borderRadius: 8, padding: 16 }}>
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: 8, padding: 16, backgroundColor: '#FFFFFF' }}>
           <legend>
             <Text fw={500}>Change Password</Text>
           </legend>

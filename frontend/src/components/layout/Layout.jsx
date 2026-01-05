@@ -11,8 +11,10 @@ const Layout = ({ children }) => {
       header={<Header />}
       footer={<Footer />}
       padding="md"
-      style={{ 
-        minHeight: '100vh' 
+      style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #F8FAFC 0%, #EEF1F5 100%)',
+        color: '#1F2937',
       }}
     >
       {/* Children content */}

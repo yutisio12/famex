@@ -8,15 +8,16 @@ import {
   Modal,
   ScrollArea,
   Title,
-  Button
+  Button,
+  Card
 } from '@mantine/core';
-import { IconEdit, IconTrash, IconRefresh } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconRefresh, IconPlus } from '@tabler/icons-react';
 import { showNotification } from '@mantine/notifications';
 import { expensesService } from '../../services/expenses';
 import ExpenseForm from './ExpenseForm';
 import { useDecimal } from '../../hooks/useDecimal';
 
-const ExpenseList = () => {
+const ExpenseList = ({ setModal }) => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -117,8 +118,8 @@ const ExpenseList = () => {
   return (
     <>
       <ScrollArea>
-        <Group position="apart" mb="xl">
-          <Title order={1}>Dashboard</Title>
+        {/* <Group position="apart" mb="xl">
+          <Title order={1}>List</Title>
           <Button
             color='green'
             leftIcon={<IconRefresh size="1rem" />}
@@ -140,7 +141,55 @@ const ExpenseList = () => {
             </tr>
           </thead>
           <tbody>{rows}</tbody>
-        </Table>
+        </Table> */}
+
+        <Card shadow="md" radius="lg" withBorder>
+          <Card.Section withBorder inheritPadding py="sm">
+            <Group position="apart">
+              <Title order={1}>List</Title>
+              <Group justify="flex-end">
+                <Button
+                  color='violet'
+                  leftIcon={<IconPlus size="1rem" />}
+                  onClick={() => setModal(true)}
+                >
+                  New
+                </Button>
+                <Button
+                  color='blue'
+                  leftIcon={<IconRefresh size="1rem" />}
+                  onClick={loadExpenses}
+                  loading={loading}
+                >
+                  Refresh
+                </Button>
+              </Group>
+            </Group>
+          </Card.Section>
+
+          <Card.Section inheritPadding py="md">
+            <Table verticalSpacing="sm">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>{rows}</tbody>
+            </Table>
+          </Card.Section>
+          {/* <Card.Section inheritPadding py="sm" withBorder>
+            <Group justify="flex-end">
+              <Button variant="subtle">Cancel</Button>
+              <Button>Save</Button>
+            </Group>
+          </Card.Section> */}
+        </Card>
+
       </ScrollArea>
 
       <Modal

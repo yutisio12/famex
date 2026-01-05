@@ -18,7 +18,7 @@ const Expenses = () => {
 
   return (
     <div>
-      <Grid mb="xl">
+      {/* <Grid mb="xl">
         <Grid.Col span={6}>
           <Title order={1}>Expense Management</Title>
           <Text color="dimmed">Manage family income and expenses</Text>
@@ -32,9 +32,9 @@ const Expenses = () => {
             Add New Transaction
           </Button>
         </Grid.Col>
-      </Grid>
+      </Grid> */}
 
-      <ExpenseList key={refreshKey} />
+      <ExpenseList key={refreshKey} setModal={setFormModalOpen} />
 
       <Modal
         opened={formModalOpen}
