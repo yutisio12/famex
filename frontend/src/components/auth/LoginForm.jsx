@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { showNotification } from '@mantine/notifications';
 import { useAuth } from '../../context/AuthContext';
+import {
+  Group,
+  Modal,
+} from '@mantine/core';
+import { IconFaceId } from '@tabler/icons-react';
+import FaceRecog from './FaceRecog';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const [formModalOpen, setFormModalOpen] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async () => {
@@ -242,56 +249,95 @@ const LoginForm = () => {
             />
           </div>
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            style={{
-              width: '100%',
-              padding: '16px',
-              fontSize: '15px',
-              fontWeight: '600',
-              color: 'white',
-              background: loading
-                ? 'linear-gradient(135deg, #8a9cee 0%, #9370b8 100%)'
-                : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              border: 'none',
-              borderRadius: '12px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              transition: 'all 0.3s ease',
-              fontFamily: 'inherit',
-              boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-              opacity: loading ? 0.8 : 1,
-              transform: loading ? 'scale(0.98)' : 'scale(1)',
-            }}
-            onMouseEnter={(e) => {
-              if (!loading) {
-                e.target.style.transform = 'translateY(-2px) scale(1.01)';
-                e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.5)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!loading) {
-                e.target.style.transform = 'scale(1)';
-                e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
-              }
-            }}
-          >
-            {loading ? (
-              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                <span style={{
-                  width: '18px',
-                  height: '18px',
-                  border: '2.5px solid white',
-                  borderTopColor: 'transparent',
-                  borderRadius: '50%',
-                  animation: 'spin 0.8s linear infinite'
-                }}></span>
-                Signing in...
-              </span>
-            ) : (
-              'Sign In'
-            )}
-          </button>
+          <Group align="center" mb="md" noWrap gap={0}>
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              style={{
+                width: '80%',
+                height: '50px',
+                padding: '16px',
+                fontSize: '15px',
+                fontWeight: '600',
+                color: 'white',
+                background: loading
+                  ? 'linear-gradient(135deg, #8a9cee 0%, #9370b8 100%)'
+                  : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                border: 'none',
+                borderRadius: '12px',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                fontFamily: 'inherit',
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                opacity: loading ? 0.8 : 1,
+                transform: loading ? 'scale(0.98)' : 'scale(1)',
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.target.style.transform = 'translateY(-2px) scale(1.01)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.5)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.target.style.transform = 'scale(1)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+                }
+              }}
+            >
+              {loading ? (
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                  <span style={{
+                    width: '18px',
+                    height: '18px',
+                    border: '2.5px solid white',
+                    borderTopColor: 'transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite'
+                  }}></span>
+                  Signing in...
+                </span>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+            <button
+              onClick={() => setFormModalOpen(true)}
+              style={{
+                width: '20%',
+                height: '50px',
+                padding: '16px',
+                fontSize: '15px',
+                fontWeight: '600',
+                color: 'white',
+                background: loading
+                  ? 'linear-gradient(135deg, #8a9cee 0%, #9370b8 100%)'
+                  : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                border: 'none',
+                borderRadius: '12px',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                fontFamily: 'inherit',
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                opacity: loading ? 0.8 : 1,
+                transform: loading ? 'scale(0.98)' : 'scale(1)',
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.target.style.transform = 'translateY(-2px) scale(1.01)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.5)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.target.style.transform = 'scale(1)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
+                }
+              }}
+            >
+              <IconFaceId />
+            </button>
+          </Group>
 
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
             <a
@@ -378,6 +424,17 @@ const LoginForm = () => {
           }
         }
       `}</style>
+      <Modal
+        opened={formModalOpen}
+        onClose={() => {
+          setFormModalOpen(false);
+        }}
+        // title="Face Recognition"
+        size="lg"
+        destroyOnClose
+      >
+        <FaceRecog />
+      </Modal>
     </div>
   );
 };
