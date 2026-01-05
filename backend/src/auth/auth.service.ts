@@ -85,13 +85,17 @@ export class AuthService {
     return user === null ? undefined : user;
   }
 
-  async changePassword(id: number, newPassword: string): Promise<void>{
+  async changePassword(id: number, currentPassword: string, newPassword: string): Promise<void>{
     const user  = await this.userRepository.findOne({ where: { id } })
     if(!user){
       throw new UnauthorizedException('User not found')
     }
-    const passwordEnc = await bcrypt.hash(newPassword, 10)
-    await this.userRepository.update(id, { password: passwordEnc })
+    if(await bcrypt.compare(currentPassword, user.password)){
+      const passwordEnc = await bcrypt.hash(newPassword, 10)
+      await this.userRepository.update(id, { password: passwordEnc })
+    } else {
+      throw new UnauthorizedException('Current password is incorrect')
+    }
   }
 
   async updateUserByUser(id: number, formData: Partial<User>){

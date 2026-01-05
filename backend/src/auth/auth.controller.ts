@@ -127,4 +127,19 @@ export class AuthController{
     return updating
   }
 
+  @Patch('update_password')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  async update_password( @Req() req, @Body() updateDTO: { current_password: string, new_password: string } ){
+    const profile = await this.authService.findOneCustom({id: req.user.id})
+
+    if (!profile) {
+      throw new NotFoundException('User not found');
+    }
+    
+    const updating = await this.authService.changePassword(req.user.id, updateDTO.current_password, updateDTO.new_password)
+
+    return updating
+  }
+
 }
