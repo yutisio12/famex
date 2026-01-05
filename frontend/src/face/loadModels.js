@@ -1,4 +1,5 @@
-import * as faceapi from 'face-api.js';
+// import * as faceapi from 'face-api.js';
+import * as faceapi from 'face-api.js/dist/face-api.min.js';
 
 export async function loadFaceModels() {
   // Menggunakan CDN karena file lokal tidak lengkap (shard2 hilang)

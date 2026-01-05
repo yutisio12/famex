@@ -1,4 +1,5 @@
-import * as faceapi from 'face-api.js';
+// import * as faceapi from 'face-api.js';
+import * as faceapi from 'face-api.js/dist/face-api.min.js';
 
 export async function getFaceDescriptor(videoRef, isUpload = false) {
   const img = isUpload === true ? await faceapi.bufferToImage(videoRef) : videoRef.current // set between upload and capture
