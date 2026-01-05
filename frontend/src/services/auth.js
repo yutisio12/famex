@@ -19,6 +19,11 @@ export const authService = {
   update_profile: async (formData) => {
     const response = await api.patch('/auth/update_profile', formData)
     return response.data
+  },
+
+  update_password: async (formData) => {
+    const response = await api.patch('/auth/update_password', formData)
+    return response.data
   }
 
 }

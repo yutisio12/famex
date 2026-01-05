@@ -29,9 +29,11 @@ const Profile = () => {
   return (
     <div>
       <Grid>
-        <Grid.Col span={6} style={{ textAlign: 'left' }}>
+        <Grid.Col span={3}></Grid.Col>
+        <Grid.Col span={6} style={{ textAlign: 'left', flex: 'center' }}>
           <ProfileForm editData={editData} setModal={setFormModalOpen} />
         </Grid.Col>
+        <Grid.Col span={3}></Grid.Col>
       </Grid>
 
       <Modal
