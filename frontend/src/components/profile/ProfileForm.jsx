@@ -18,7 +18,6 @@ import { getFaceDescriptor } from '../../face/getDescriptor';
 const ProfileForm = ({ onSuccess, editData, setModal }) => {
   const [loading, setLoading] = useState(false);
 
-  console.log(editData)
   const form = useForm({
     initialValues: {
       name: '',
@@ -26,6 +25,21 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
       role: 2,
       username: '',
     }
+  });
+
+  const formPassword = useForm({
+    initialValues: {
+      current_password: '',
+      new_password: '',
+      confirm_password: '',
+    },
+
+    validate: {
+      confirm_password: (value, values) =>
+        value !== values.new_password ? 'Password Not Match' : null,
+    },
+
+    validateInputOnChange: true,
   });
 
   useEffect(() => {
@@ -66,6 +80,34 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
       showNotification({
         title: 'Error',
         message: 'Failed to update profile',
+        color: 'red',
+      });
+    }
+    setLoading(false);
+  };
+
+  const handleChangePassword = async (values) => {
+    setLoading(true);
+
+    try {
+      const payloadUpdate = {
+        current_password: values.current_password,
+        new_password: values.new_password,
+      };
+
+      await authService.update_password(payloadUpdate);
+      showNotification({
+        title: 'Success',
+        message: 'Password has been updated',
+        color: 'green',
+      });
+
+      onSuccess?.();
+    } catch (error) {
+      console.log("err:", error)
+      showNotification({
+        title: 'Error',
+        message: 'Failed to update password',
         color: 'red',
       });
     }
@@ -161,6 +203,47 @@ const ProfileForm = ({ onSuccess, editData, setModal }) => {
 
           <Group position="right">
             <Button type="submit" loading={loading} onClick={handleSubmit}>
+              Save
+            </Button>
+          </Group>
+
+        </fieldset>
+
+      </form>
+      <br />
+      <form onSubmit={formPassword.onSubmit(handleChangePassword)}>
+
+        <fieldset style={{ border: '1px solid #ccc', borderRadius: 8, padding: 16 }}>
+          <legend>
+            <Text fw={500}>Change Password</Text>
+          </legend>
+
+          <TextInput
+            label="Current Password"
+            placeholder="Your Current Password"
+            {...formPassword.getInputProps('current_password')}
+            mb="md"
+            type="password"
+          />
+
+          <TextInput
+            label="New Password"
+            placeholder="Your New Password"
+            {...formPassword.getInputProps('new_password')}
+            mb="md"
+            type="password"
+          />
+
+          <TextInput
+            label="Confirm Password"
+            placeholder="Your Confirm Password"
+            {...formPassword.getInputProps('confirm_password')}
+            mb="md"
+            type="password"
+          />
+
+          <Group position="right">
+            <Button type="submit" loading={loading} onClick={handleChangePassword}>
               Save
             </Button>
           </Group>
