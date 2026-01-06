@@ -7,7 +7,14 @@ import './App.css';
 
 function App() {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{
+        primaryColor: 'violet',
+        primaryShade: 6,
+      }}
+    >
       <NotificationsProvider>
         <AuthProvider>
           <AppRouter />
