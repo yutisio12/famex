@@ -40,9 +40,8 @@ const Profile = () => {
         opened={formModalOpen}
         onClose={() => {
           setFormModalOpen(false);
-          // stopCamera();
         }}
-        title="Register Face"
+        // title="Register Face"
         size="lg"
         destroyOnClose
       >

@@ -19,7 +19,10 @@ const Header = () => {
       </Text>
 
       <Group>
-        <Avatar color="blue" radius="xl">
+        <Avatar
+          radius="xl"
+          color='violet'
+        >
           {user?.username?.charAt(0).toUpperCase()}
         </Avatar>
         <Text>Halo, {user?.username}</Text>

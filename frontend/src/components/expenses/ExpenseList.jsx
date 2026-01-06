@@ -72,6 +72,14 @@ const ExpenseList = ({ setModal }) => {
     }
   };
 
+  const handleAmount = (value) => {
+
+    if (!value) return '';
+
+    const numeric = value.replace(/\D/g, '');
+    return numeric.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
+
   const handleEdit = (expense) => {
     setSelectedExpense(expense);
     setEditModalOpen(true);
@@ -93,10 +101,15 @@ const ExpenseList = ({ setModal }) => {
         <Text weight={500}>{expense.description}</Text>
       </td>
       <td>
-        <Text>Rp {cleanDecimal(expense.amount?.toLocaleString())}</Text>
+        {/* <Text>Rp {cleanDecimal(expense.amount?.toLocaleString())}</Text> */}
+        <Text>Rp <strong>{handleAmount(expense.amount)}</strong></Text>
       </td>
       <td>
-        <Text>{new Date(expense.expense_date).toLocaleDateString('id-ID')}</Text>
+        <Text>{new Date(expense.expense_date).toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        })}</Text>
       </td>
       <td>
         <Group spacing="xs">

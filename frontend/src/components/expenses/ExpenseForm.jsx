@@ -24,7 +24,7 @@ const ExpenseForm = ({ onSuccess, editData }) => {
       category_id: '',
       expense_date: new Date(),
       type: '1'
-    }, 
+    },
     validate: {
       amount: (value) => (value <= 0 ? 'Jumlah harus lebih dari 0' : null),
       description: (value) => (value.length < 3 ? 'Deskripsi terlalu pendek' : null),
@@ -34,17 +34,17 @@ const ExpenseForm = ({ onSuccess, editData }) => {
 
   const formatDateToYYYYMMDD = (date) => {
     if (!date) return null;
-    
+
     const d = new Date(date);
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
-    if(form.values.type){
+    if (form.values.type) {
       loadCategory()
     }
   }, [form.values.type]);
@@ -88,7 +88,7 @@ const ExpenseForm = ({ onSuccess, editData }) => {
 
   const handleSubmit = async (values) => {
     setLoading(true);
-    
+
     try {
       const item = {
         type: parseInt(values.type, 10) || 1,
@@ -133,7 +133,7 @@ const ExpenseForm = ({ onSuccess, editData }) => {
           color: 'green',
         });
       }
-      
+
       form.reset();
       onSuccess?.();
     } catch (error) {
@@ -144,7 +144,7 @@ const ExpenseForm = ({ onSuccess, editData }) => {
         color: 'red',
       });
     }
-    
+
     setLoading(false);
   };
 
@@ -155,25 +155,35 @@ const ExpenseForm = ({ onSuccess, editData }) => {
           label="Jumlah"
           placeholder="Masukkan jumlah"
           min={0}
-          precision={2}
+          // precision={2}
+          disableScrollWheel
+          thousandSeparator="."
+          parser={(value) => value.replace(/\./g, '').replace(',', '.')}
+          formatter={(value) =>
+            !Number.isNaN(parseFloat(value))
+              ? value
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+              : ''
+          }
           {...form.getInputProps('amount')}
           mb="md"
         />
-        
+
         <Textarea
           label="Deskripsi"
           placeholder="Deskripsi pengeluaran"
           {...form.getInputProps('description')}
           mb="md"
         />
-        
-        
+
+
         <DatePicker
           label="Tanggal"
           {...form.getInputProps('expense_date')}
           mb="md"
         />
-        
+
         <Select
           label="Tipe"
           data={[
@@ -183,7 +193,7 @@ const ExpenseForm = ({ onSuccess, editData }) => {
           {...form.getInputProps('type')}
           mb="md"
         />
-        
+
         <Select
           label="Kategori"
           placeholder="Pilih kategori"
