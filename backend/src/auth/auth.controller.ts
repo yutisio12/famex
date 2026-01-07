@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Res, HttpStatus, UseGuards, Get, Req, NotFoundException } from "@nestjs/common";
+import { Controller, Post, Body, Patch, Res, HttpStatus, UseGuards, Get, Req, NotFoundException, BadRequestException } from "@nestjs/common";
 import type { Response, Request } from "express";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./jwt-auth.guard";
@@ -140,6 +140,45 @@ export class AuthController{
     const updating = await this.authService.changePassword(req.user.id, updateDTO.current_password, updateDTO.new_password)
 
     return updating
+  }
+
+  @Post('face_login')
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({ status: 200, description: 'Login successful' })
+  async face_login(
+    @Body() loginDto: {faceDescriptor: number[]},
+    @Res() response: Response,
+  ){
+    const inputDescriptor = loginDto.faceDescriptor
+    if (!Array.isArray(inputDescriptor) || inputDescriptor.length !== 128) {
+      throw new BadRequestException('Invalid face descriptor');
+    }
+
+    const loginData = await this.authService.face_login(inputDescriptor);
+    // return response.status(HttpStatus.OK).json({
+    //   statusCode: HttpStatus.OK,
+    //   loginData
+    // })
+
+    if(!loginData){
+      return response.status(HttpStatus.UNAUTHORIZED).json({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid credentials'
+      })
+    }
+
+    response.cookie('access_token', loginData.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    })
+
+    return response.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      ...loginData
+    })
+
   }
 
 }

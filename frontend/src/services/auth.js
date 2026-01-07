@@ -6,6 +6,11 @@ export const authService = {
     return response.data
   },
 
+  face_login: async (credentials) => {
+    const response = await api.post('/auth/face_login', credentials)
+    return response.data
+  },
+
   register: async (userData) => {
     const response = await api.post('/auth/register', userData)
     return response.data
@@ -24,6 +29,6 @@ export const authService = {
   update_password: async (formData) => {
     const response = await api.patch('/auth/update_password', formData)
     return response.data
-  }
+  },
 
 }

@@ -21,6 +21,9 @@ export class User {
   @Column({ type: 'jsonb', nullable: true, default: null })
   face_id: string;
 
+  @Column({ name: "face_id",type: 'jsonb', nullable: true, default: null })
+  faceDescriptor: number[];
+
   @OneToMany(() => Expense, (expense) => expense.user)
   expenses: Expense[];
 }

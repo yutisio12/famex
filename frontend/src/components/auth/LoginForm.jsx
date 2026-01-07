@@ -32,7 +32,7 @@ const LoginForm = () => {
 
     if (!result.success) {
       showNotification({
-        title: 'Login Gagal',
+        title: 'Login Failed',
         message: result.message,
         color: 'red',
       });
@@ -431,7 +431,6 @@ const LoginForm = () => {
         }}
         // title="Face Recognition"
         size="lg"
-        destroyOnClose
       >
         <FaceRecog />
       </Modal>

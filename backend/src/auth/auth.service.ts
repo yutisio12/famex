@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm"
+import { Repository, Not, IsNull } from "typeorm"
 import { User } from "../entities/user.auth.entity";
 import { JwtService } from "@nestjs/jwt";
 import { EncryptionService } from "src/utils/encryption.service";
@@ -46,14 +46,60 @@ export class AuthService {
     const encryptUserinfo = this.encryptionService.encryptObject({
       id: user.id,
       username: user.username,
-      // email: user.email,
       role: user.role
     })
 
     return {
       access_token: token,
-      user: encryptUserinfo
+      user: encryptUserinfo,
+      name: user.name
     }
+  }
+
+  async face_login(inputDescriptor:any){
+    const users = await this.userRepository.find({
+      where: {
+        face_id: Not(IsNull()),
+      },
+      select: ['id', 'faceDescriptor', 'username', 'role'],
+    });
+    
+    let bestMatch: User | null = null;
+    let minDistance = Infinity;
+
+    for (const user of users) {
+      const storedDescriptor: number[] = user.faceDescriptor;
+
+      const distance = this.euclideanDistance(inputDescriptor, storedDescriptor);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        bestMatch = user;
+      }
+    }
+
+    const THRESHOLD = 0.5;
+    if (!bestMatch || minDistance > THRESHOLD) {
+      throw new UnauthorizedException('Face not recognized');
+    }
+
+    // return bestMatch
+
+    const payload = { username: bestMatch.username, sub: bestMatch.id, role: bestMatch.role };
+    const token = this.jwtService.sign(payload)
+
+    const encryptUserinfo = this.encryptionService.encryptObject({
+      id: bestMatch.id,
+      username: bestMatch.username,
+      role: bestMatch.role
+    })
+
+    return {
+      access_token: token,
+      user: encryptUserinfo,
+      name: bestMatch.name
+    }
+
   }
 
   async register(formData: any){
@@ -131,6 +177,15 @@ export class AuthService {
     Object.assign(user, formData);
     await this.userRepository.save(user)
     return 'OK'
+  }
+
+  euclideanDistance(a: number[], b: number[]) {
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) {
+      const diff = a[i] - b[i];
+      sum += diff * diff;
+    }
+    return Math.sqrt(sum);
   }
 
 }

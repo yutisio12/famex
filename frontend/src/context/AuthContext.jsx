@@ -63,6 +63,42 @@ export const AuthProvider = ({children}) => {
     }
   }
 
+  const face_login = async (credentials) => {
+    try {
+      const response = await authService.face_login(credentials)
+
+      // backend may send token under different keys; handle common variants
+      const {
+        user: userData,
+        access_token,
+        accessToken,
+        token: tokenField,
+        acces_token // handle potential misspelling
+      } = response || {}
+
+      const token = access_token || accessToken || tokenField || acces_token
+
+      if(token){
+        localStorage.setItem('token', token)
+      } else {
+        // don't store undefined/null strings
+        console.warn('Login response did not include a token')
+      }
+
+      if(userData){
+        localStorage.setItem('user', JSON.stringify(userData))
+        setUser(userData)
+      }
+
+      return { success: true }
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Login Failed'
+      }
+    }
+  }
+
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
@@ -72,6 +108,7 @@ export const AuthProvider = ({children}) => {
   const value = {
     user,
     login,
+    face_login,
     logout,
     loading
   }

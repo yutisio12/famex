@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { loadFaceModels } from '../../face/loadModels';
 import { getFaceDescriptor } from '../../face/getDescriptor';
 import { showNotification } from '@mantine/notifications';
-import { authService } from '../../services/auth';
 import { IconFaceId } from '@tabler/icons-react';
+import { useAuth } from '../../context/AuthContext';
+import { authService } from '../../services/auth'; 
 
 export default function FaceRecog() {
   const videoRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
+  const { face_login } = useAuth();
 
   useEffect(() => {
     async function init() {
@@ -16,24 +18,37 @@ export default function FaceRecog() {
 
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       videoRef.current.srcObject = stream;
+      try {
+        await videoRef.current.play();
+      } catch (err) {
+        // some browsers may block autoplay; video may still produce frames
+        // but play() can fail — fall back to marking ready
+        // eslint-disable-next-line no-console
+        console.warn('video play failed', err);
+      }
       setReady(true);
     }
     init();
   }, []);
 
-  async function handleRegister() {
+  async function handleLogin() {
     try {
       setLoading(true);
       const descriptor = await getFaceDescriptor(videoRef);
       const payloadUpdate = {
-        face_id: descriptor,
+        faceDescriptor: descriptor,
       };
-      await authService.update_profile(payloadUpdate);
-      showNotification({
-        title: 'Success',
-        message: 'Face Has Been Registered',
-        color: 'green',
-      });
+      
+      const result = await face_login(payloadUpdate);
+      if (!result.success) {
+        showNotification({
+          title: 'Login Failed',
+          message: result.message,
+          color: 'red',
+        });
+      }
+  
+      setLoading(false);
     } catch (err) {
       showNotification({
         title: 'Error',
@@ -54,7 +69,7 @@ export default function FaceRecog() {
       <br />
       <button
         disabled={!ready || loading}
-        onClick={handleRegister}
+        onClick={handleLogin}
         style={{
           width: '30%',
           height: '53px',
