@@ -116,11 +116,6 @@ export class AuthService {
     return result
   }
 
-  // async findUserByeEmail(email: string): Promise<User | undefined>{
-  //   const user = await this.userRepository.findOne({ where: { email } });
-  //   return user === null ? undefined : user;
-  // }
-
   async findUserByeUsername(username: string): Promise<User | undefined>{
     const user = await this.userRepository.findOne({ where: { username } });
     return user === null ? undefined : user;

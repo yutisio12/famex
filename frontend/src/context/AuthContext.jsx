@@ -5,24 +5,29 @@ const AuthContext = createContext()
 
 export const useAuth = () => {
   const context = useContext(AuthContext)
-  if(!context){
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider')
   }
   return context;
 }
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [fullName, setFullName] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
     const userData = localStorage.getItem('user')
+    const nameX = localStorage.getItem('name')
 
     // guard against stringified 'undefined' or 'null' values
     const validToken = token && token !== 'undefined' && token !== 'null'
-    if(validToken && userData){
+    if (validToken && userData) {
       setUser(JSON.parse(userData))
+    }
+    if (validToken && nameX) {
+      setFullName(JSON.parse(nameX))
     }
     setLoading(false)
   }, [])
@@ -34,6 +39,7 @@ export const AuthProvider = ({children}) => {
       // backend may send token under different keys; handle common variants
       const {
         user: userData,
+        name: nameX,
         access_token,
         accessToken,
         token: tokenField,
@@ -42,16 +48,21 @@ export const AuthProvider = ({children}) => {
 
       const token = access_token || accessToken || tokenField || acces_token
 
-      if(token){
+      if (token) {
         localStorage.setItem('token', token)
       } else {
         // don't store undefined/null strings
         console.warn('Login response did not include a token')
       }
 
-      if(userData){
+      if (userData) {
         localStorage.setItem('user', JSON.stringify(userData))
         setUser(userData)
+      }
+
+      if (nameX) {
+        localStorage.setItem('name', JSON.stringify(nameX))
+        setFullName(nameX)
       }
 
       return { success: true }
@@ -70,6 +81,7 @@ export const AuthProvider = ({children}) => {
       // backend may send token under different keys; handle common variants
       const {
         user: userData,
+        name: nameX,
         access_token,
         accessToken,
         token: tokenField,
@@ -78,16 +90,21 @@ export const AuthProvider = ({children}) => {
 
       const token = access_token || accessToken || tokenField || acces_token
 
-      if(token){
+      if (token) {
         localStorage.setItem('token', token)
       } else {
         // don't store undefined/null strings
         console.warn('Login response did not include a token')
       }
 
-      if(userData){
+      if (userData) {
         localStorage.setItem('user', JSON.stringify(userData))
         setUser(userData)
+      }
+
+      if (nameX) {
+        localStorage.setItem('name', JSON.stringify(nameX))
+        setFullName(nameX)
       }
 
       return { success: true }
@@ -107,6 +124,7 @@ export const AuthProvider = ({children}) => {
 
   const value = {
     user,
+    fullName,
     login,
     face_login,
     logout,
