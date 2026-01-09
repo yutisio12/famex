@@ -182,7 +182,10 @@ export class AuthService {
 
     const datadb = this.userRepository.createQueryBuilder('user')
     datadb.select(['user.id', 'user.username', 'user.name', 'user.role'])
-    datadb.addSelect(['CASE WHEN user.face_id IS NOT NULL THEN 1 ELSE 0 END as face_id'])
+    datadb.addSelect(
+      'CASE WHEN user.face_id IS NOT NULL THEN 1 ELSE 0 END',
+      'face_id'
+    );
     if(search){
       datadb.where('(username ILIKE :search OR name ILIKE :search)', {search: `%${search}%`})
     }
@@ -201,7 +204,15 @@ export class AuthService {
       datadb.orderBy(`${sortBy}`, sortType.toUpperCase() === 'DESC' ? 'DESC' : 'ASC')
     }
     datadb.skip((page - 1) * limit).take(limit);
-    const [data, total] = await datadb.getManyAndCount()
+    let data = await datadb.getRawMany();
+    data = data.map(r => ({
+      id: r.user_id,
+      username: r.user_username,
+      name: r.user_name,
+      role: r.user_role,
+      face_id: r.face_id
+    }));
+    const total = await datadb.getCount();
 
     return new PaginationResponseDto(data, total, page, limit);
   }

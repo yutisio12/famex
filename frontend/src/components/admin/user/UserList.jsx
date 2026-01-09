@@ -93,10 +93,10 @@ const UserList = ({ setModal }) => {
         <Text weight={500}>{expense.name}</Text>
       </td>
       <td>
-
+        <Text weight={500}>{expense.face_id == 1 ? 'Yes' : 'No'}</Text>
       </td>
       <td>
-
+        <Text weight={500}>{expense.role == 1 ? 'Admin' : 'User'}</Text>
       </td>
       <td>
         <Group spacing="xs">
