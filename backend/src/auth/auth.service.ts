@@ -4,6 +4,8 @@ import { Repository, Not, IsNull } from "typeorm"
 import { User } from "../entities/user.auth.entity";
 import { JwtService } from "@nestjs/jwt";
 import { EncryptionService } from "src/utils/encryption.service";
+import { PaginationQueryDto } from 'src/pagination/pagination-query.dto';
+import { PaginationResponseDto } from 'src/pagination/pagination-response.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -172,6 +174,36 @@ export class AuthService {
     Object.assign(user, formData);
     await this.userRepository.save(user)
     return 'OK'
+  }
+
+  async findAll(query: PaginationQueryDto, customWhere?: Record<string, any>) {
+    const {page, limit, sort, search} = query
+    const where: any = {}
+
+    const datadb = this.userRepository.createQueryBuilder('user')
+    datadb.select(['user.id', 'user.username', 'user.name', 'user.role'])
+    datadb.addSelect(['CASE WHEN user.face_id IS NOT NULL THEN 1 ELSE 0 END as face_id'])
+    if(search){
+      datadb.where('(username ILIKE :search OR name ILIKE :search)', {search: `%${search}%`})
+    }
+    if (customWhere) {
+      Object.keys(customWhere).forEach((key) => {
+        // Kalau value array, pakai IN
+        if (Array.isArray(customWhere[key])) {
+          datadb.andWhere(`user.${key} IN (:...${key})`, { [key]: customWhere[key] });
+        } else {
+          datadb.andWhere(`user.${key} = :${key}`, { [key]: customWhere[key] });
+        }
+      });
+    }
+    if(sort){
+      const [sortBy, sortType] = sort.split(',')
+      datadb.orderBy(`${sortBy}`, sortType.toUpperCase() === 'DESC' ? 'DESC' : 'ASC')
+    }
+    datadb.skip((page - 1) * limit).take(limit);
+    const [data, total] = await datadb.getManyAndCount()
+
+    return new PaginationResponseDto(data, total, page, limit);
   }
 
   euclideanDistance(a: number[], b: number[]) {

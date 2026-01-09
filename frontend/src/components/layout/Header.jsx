@@ -2,6 +2,7 @@ import React from 'react';
 import { Group, Text, Button, Avatar } from '@mantine/core';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { IconLogout } from '@tabler/icons-react';
 
 const Header = () => {
   const { user, logout, fullName } = useAuth();
@@ -36,7 +37,12 @@ const Header = () => {
         </Avatar>
         <Text>Halo, <strong>{name}</strong></Text>
         |
-        <Button style={{ border: '1px solid #dee2e6' }} variant="light" onClick={logout}>
+        <Button
+          style={{ border: '1px solid #dee2e6' }}
+          variant="light"
+          onClick={logout}
+          leftIcon={<IconLogout size="1rem" />}
+        >
           Logout
         </Button>
       </Group>

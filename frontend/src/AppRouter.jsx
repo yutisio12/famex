@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Expenses from './pages/Expenses';
 import Profile from './pages/Profile';
+import Admin from './pages/Admin';
 import Layout from './components/layout/Layout';
 
 function AppRouter() {
@@ -50,6 +51,7 @@ function AppRouter() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="expenses" element={<Expenses />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="admin/user" element={<Admin />} />
         </Route>
 
         <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />

@@ -5,7 +5,7 @@ import {
   IconCash,
   IconFaceId,
   IconUser,
-  IconLogout
+  // IconLogout
 } from '@tabler/icons-react'
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -19,6 +19,7 @@ const Navigation = () => {
     { icon: IconDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: IconCash, label: 'Expense', path: '/expenses' },
     { icon: IconFaceId, label: 'Profile', path: '/profile' },
+    { icon: IconUser, label: 'User', path: '/admin/user' },
   ]
 
   return (
@@ -30,13 +31,16 @@ const Navigation = () => {
           label={item.label}
           icon={<item.icon size="1rem" />}
           onClick={() => navigate(item.path)}
+          style={{
+            border: location.pathname === item.path ? '1px solid #dee2e6' : 'none'
+          }}
         />
       ))}
-      <NavLink
+      {/* <NavLink
         label="logout"
         icon={<IconLogout size="1rem" />}
         onClick={logout}
-      />
+      /> */}
     </Stack>
   )
 

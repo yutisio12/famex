@@ -13,11 +13,11 @@ import {
 } from '@mantine/core';
 import { IconEdit, IconTrash, IconRefresh, IconPlus } from '@tabler/icons-react';
 import { showNotification } from '@mantine/notifications';
-import { expensesService } from '../../services/expenses';
-import ExpenseForm from './ExpenseForm';
-import { useDecimal } from '../../hooks/useDecimal';
+import { adminService } from '../../../services/admin';
+import UserForm from './UserForm';
+import { useDecimal } from '../../../hooks/useDecimal';
 
-const ExpenseList = ({ setModal }) => {
+const UserList = ({ setModal }) => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -30,16 +30,12 @@ const ExpenseList = ({ setModal }) => {
 
   const loadExpenses = async () => {
     try {
-      // const data = await expensesService.getDataTable();
 
-      // const data = await expensesService.getAll();
-      // setExpenses(data);
-
-      const data = await expensesService.getDataTable({
+      const data = await adminService.user_list({
         page: 1,
         limit: 100,
         // search: filters.search || '',
-        sort: 'expenses_id,DESC',
+        sort: 'id,DESC',
         // customWhere: filters.customWhere || {},
       });
       setExpenses(data.data);
@@ -55,34 +51,29 @@ const ExpenseList = ({ setModal }) => {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await expensesService.delete(id);
-      showNotification({
-        title: 'Success',
-        message: 'Data Has Been Deleted',
-        color: 'green',
-      });
-      loadExpenses();
-    } catch (error) {
-      showNotification({
-        title: 'Error',
-        message: 'Failed to delete data',
-        color: 'red',
-      });
-    }
+    // try {
+    //   await expensesService.delete(id);
+    //   showNotification({
+    //     title: 'Success',
+    //     message: 'Data Has Been Deleted',
+    //     color: 'green',
+    //   });
+    //   loadExpenses();
+    // } catch (error) {
+    //   showNotification({
+    //     title: 'Error',
+    //     message: 'Failed to delete data',
+    //     color: 'red',
+    //   });
+    // }
   };
 
   const handleAmount = (value) => {
+
     if (!value) return '';
 
-    // Ambil hanya angka dan titik
-    const clean = value.replace(/[^0-9.]/g, '');
-
-    // Ambil hanya bagian sebelum desimal
-    const integerPart = clean.split('.')[0];
-
-    // Format ribuan
-    return integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const numeric = value.replace(/\D/g, '');
+    return numeric.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
 
   const handleEdit = (expense) => {
@@ -90,31 +81,22 @@ const ExpenseList = ({ setModal }) => {
     setEditModalOpen(true);
   };
 
-  const rows = expenses.map((expense) => (
+  const rows = expenses.map((expense, key) => (
     <tr key={expense.id}>
       <td>
-        <Badge color={expense.type === 2 ? 'green' : 'red'}>
-          {expense.type === 2 ? 'Income' : 'Expense'}
-        </Badge>
+        {key + 1}
       </td>
       <td>
-        {/* <Text>{expense.category?.name}</Text> */}
-        {/* <Text>{expense.category_id}</Text> */}
-        <Text style={{ fontWeight: 'bold' }}>{expense.category.name}</Text>
+        <Text style={{ fontWeight: 'bold' }}>{expense.username}</Text>
       </td>
       <td>
-        <Text weight={500}>{expense.description}</Text>
+        <Text weight={500}>{expense.name}</Text>
       </td>
       <td>
-        {/* <Text>Rp {cleanDecimal(expense.amount?.toLocaleString())}</Text> */}
-        <Text>Rp <strong>{handleAmount(expense.amount)}</strong></Text>
+
       </td>
       <td>
-        <Text>{new Date(expense.expense_date).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-        })}</Text>
+
       </td>
       <td>
         <Group spacing="xs">
@@ -136,35 +118,11 @@ const ExpenseList = ({ setModal }) => {
   return (
     <>
       <ScrollArea>
-        {/* <Group position="apart" mb="xl">
-          <Title order={1}>List</Title>
-          <Button
-            color='green'
-            leftIcon={<IconRefresh size="1rem" />}
-            onClick={loadExpenses}
-            loading={loading}
-          >
-            Refresh
-          </Button>
-        </Group>
-        <Table verticalSpacing="sm">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </Table> */}
 
         <Card shadow="md" radius="lg" withBorder>
           <Card.Section withBorder inheritPadding py="sm">
             <Group position="apart">
-              <Title order={1}>Expense List</Title>
+              <Title order={1}>User List</Title>
               <Group justify="flex-end">
                 <Button
                   color='violet'
@@ -189,11 +147,11 @@ const ExpenseList = ({ setModal }) => {
             <Table verticalSpacing="sm">
               <thead>
                 <tr>
-                  <th>Type</th>
-                  <th>Category</th>
-                  <th>Description</th>
-                  <th>Amount</th>
-                  <th>Date</th>
+                  <th>No</th>
+                  <th>Username</th>
+                  <th>Name</th>
+                  <th>Face ID</th>
+                  <th>Role</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -216,7 +174,7 @@ const ExpenseList = ({ setModal }) => {
         title="Modify Expense"
         size="lg"
       >
-        <ExpenseForm
+        <UserForm
           editData={selectedExpense}
           onSuccess={() => {
             setEditModalOpen(false);
@@ -228,4 +186,4 @@ const ExpenseList = ({ setModal }) => {
   );
 };
 
-export default ExpenseList;
+export default UserList;

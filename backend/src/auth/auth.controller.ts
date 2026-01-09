@@ -1,9 +1,10 @@
-import { Controller, Post, Body, Patch, Res, HttpStatus, UseGuards, Get, Req, NotFoundException, BadRequestException } from "@nestjs/common";
+import { Controller, Post, Body, Patch, Res, HttpStatus, UseGuards, Get, Req, NotFoundException, BadRequestException, Query } from "@nestjs/common";
 import type { Response, Request } from "express";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { LoginDto } from "./dto/login.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiCookieAuth, ApiBody } from "@nestjs/swagger";
+import { PaginationQueryDto } from 'src/pagination/pagination-query.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -179,6 +180,14 @@ export class AuthController{
       ...loginData
     })
 
+  }
+
+  @Get('user_list')
+  @ApiOperation({ summary: 'Get User List' })
+  @ApiResponse({ status: 200, description: 'User List' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  findAll(@Query() query: PaginationQueryDto, ) {
+    return this.authService.findAll(query);
   }
 
 }
