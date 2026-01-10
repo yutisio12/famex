@@ -15,20 +15,18 @@ import { IconEdit, IconTrash, IconRefresh, IconPlus } from '@tabler/icons-react'
 import { showNotification } from '@mantine/notifications';
 import { adminService } from '../../../services/admin';
 import UserForm from './UserForm';
-import { useDecimal } from '../../../hooks/useDecimal';
 
 const UserList = ({ setModal }) => {
-  const [expenses, setExpenses] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedExpense, setSelectedExpense] = useState(null);
-  const { sumDecimals, formatDisplay, cleanDecimal } = useDecimal()
 
   useEffect(() => {
-    loadExpenses();
+    loadUsers();
   }, []);
 
-  const loadExpenses = async () => {
+  const loadUsers = async () => {
     try {
 
       const data = await adminService.user_list({
@@ -38,11 +36,11 @@ const UserList = ({ setModal }) => {
         sort: 'id,DESC',
         // customWhere: filters.customWhere || {},
       });
-      setExpenses(data.data);
+      setUsers(data.data);
     } catch (error) {
       showNotification({
         title: 'Error',
-        message: 'Failed to load expense data',
+        message: 'Failed to load data user',
         color: 'red',
       });
     } finally {
@@ -76,34 +74,34 @@ const UserList = ({ setModal }) => {
     return numeric.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
 
-  const handleEdit = (expense) => {
-    setSelectedExpense(expense);
+  const handleEdit = (user) => {
+    setSelectedUser(user);
     setEditModalOpen(true);
   };
 
-  const rows = expenses.map((expense, key) => (
-    <tr key={expense.id}>
+  const rows = users.map((value, key) => (
+    <tr key={value.id} style={{ textAlign: 'center' }}>
       <td>
         {key + 1}
       </td>
       <td>
-        <Text style={{ fontWeight: 'bold' }}>{expense.username}</Text>
+        <Text style={{ fontWeight: 'bold' }}>{value.username}</Text>
       </td>
       <td>
-        <Text weight={500}>{expense.name}</Text>
+        <Text weight={500}>{value.name ?? 'N/A'}</Text>
       </td>
       <td>
-        <Text weight={500}>{expense.face_id == 1 ? 'Yes' : 'No'}</Text>
+        <Text weight={500}>{value.face_id == 1 ? 'Yes' : 'No'}</Text>
       </td>
       <td>
-        <Text weight={500}>{expense.role == 1 ? 'Admin' : 'User'}</Text>
+        <Text weight={500}>{value.role == 1 ? 'Admin' : 'User'}</Text>
       </td>
       <td>
         <Group spacing="xs">
-          <ActionIcon color="blue" onClick={() => handleEdit(expense)}>
+          <ActionIcon color="blue" onClick={() => handleEdit(value)}>
             <IconEdit size="1rem" />
           </ActionIcon>
-          <ActionIcon color="red" onClick={() => handleDelete(expense.id)}>
+          <ActionIcon color="red" onClick={() => handleDelete(value.id)}>
             <IconTrash size="1rem" />
           </ActionIcon>
         </Group>
@@ -134,7 +132,7 @@ const UserList = ({ setModal }) => {
                 <Button
                   color='blue'
                   leftIcon={<IconRefresh size="1rem" />}
-                  onClick={loadExpenses}
+                  onClick={loadUsers}
                   loading={loading}
                 >
                   Refresh
@@ -147,38 +145,32 @@ const UserList = ({ setModal }) => {
             <Table verticalSpacing="sm">
               <thead>
                 <tr>
-                  <th>No</th>
-                  <th>Username</th>
-                  <th>Name</th>
-                  <th>Face ID</th>
-                  <th>Role</th>
-                  <th>Actions</th>
+                  <th style={{ textAlign: 'center' }}>No</th>
+                  <th style={{ textAlign: 'center' }}>Username</th>
+                  <th style={{ textAlign: 'center' }}>Name</th>
+                  <th style={{ textAlign: 'center' }}>Face ID</th>
+                  <th style={{ textAlign: 'center' }}>Role</th>
+                  <th style={{ textAlign: 'center' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>{rows}</tbody>
             </Table>
           </Card.Section>
-          {/* <Card.Section inheritPadding py="sm" withBorder>
-            <Group justify="flex-end">
-              <Button variant="subtle">Cancel</Button>
-              <Button>Save</Button>
-            </Group>
-          </Card.Section> */}
         </Card>
 
-      </ScrollArea>
+      </ScrollArea >
 
       <Modal
         opened={editModalOpen}
         onClose={() => setEditModalOpen(false)}
-        title="Modify Expense"
+        title="Edit User"
         size="lg"
       >
         <UserForm
-          editData={selectedExpense}
+          editData={selectedUser}
           onSuccess={() => {
             setEditModalOpen(false);
-            loadExpenses();
+            loadUsers();
           }}
         />
       </Modal>

@@ -72,7 +72,7 @@ export class AuthController{
     }
   })
   async register(
-    @Body() registerDto: { username: string, password: string, role?: number },
+    @Body() registerDto: { username: string, password: string, name: string, role?: number },
   ) {
     const checkUsername = await this.authService.findOneCustom({ username: registerDto.username });
     if(checkUsername){

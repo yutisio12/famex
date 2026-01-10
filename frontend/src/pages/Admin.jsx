@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Title, Button, Modal, Grid, Text } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
-import ExpenseForm from '../components/expenses/ExpenseForm';
-import ExpenseList from '../components/expenses/ExpenseList';
+import { Modal } from '@mantine/core';
+import UserForm from '../components/admin/user/UserForm';
 import UserList from '../components/admin/user/UserList';
 import { useDecimal } from '../hooks/useDecimal';
 
@@ -25,10 +23,10 @@ const Admin = () => {
       <Modal
         opened={formModalOpen}
         onClose={() => setFormModalOpen(false)}
-        title="Add New Transaction"
+        title="Add User"
         size="lg"
       >
-        <ExpenseForm onSuccess={handleSuccess} />
+        <UserForm onSuccess={handleSuccess} />
       </Modal>
     </div>
   );

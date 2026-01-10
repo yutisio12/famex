@@ -7,4 +7,9 @@ export const adminService = {
     return response.data
   },
 
+  add_user: async (formData) => {
+    const response = await api.post('/auth/register', formData)
+    return response.data
+  },
+
 }
