@@ -12,4 +12,9 @@ export const adminService = {
     return response.data
   },
 
+  update_user: async (formData) => {
+    const response = await api.patch('/auth/update_user', formData)
+    return response.data
+  },
+
 }

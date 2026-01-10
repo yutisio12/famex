@@ -60,7 +60,28 @@ const UserForm = ({ onSuccess, editData }) => {
       //     color: 'green',
       //   });
       // } else {
-      await adminService.add_user(payload);
+      const result = await adminService.add_user(payload);
+
+      if (!result.id) {
+        showNotification({
+          title: 'Error',
+          message: result.message,
+          color: 'red',
+        });
+
+        if (result.statusCode == 409) {
+          form.setValues({
+            username: ''
+          })
+          form.setErrors({
+            username: result.message
+          })
+        }
+
+        setLoading(false);
+        return
+      }
+
       showNotification({
         title: 'Success',
         message: 'User added successfully',

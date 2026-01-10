@@ -33,7 +33,7 @@ const UserList = ({ setModal }) => {
         page: 1,
         limit: 100,
         // search: filters.search || '',
-        sort: 'id,DESC',
+        sort: 'id,ASC',
         // customWhere: filters.customWhere || {},
       });
       setUsers(data.data);
@@ -49,21 +49,34 @@ const UserList = ({ setModal }) => {
   };
 
   const handleDelete = async (id) => {
-    // try {
-    //   await expensesService.delete(id);
-    //   showNotification({
-    //     title: 'Success',
-    //     message: 'Data Has Been Deleted',
-    //     color: 'green',
-    //   });
-    //   loadExpenses();
-    // } catch (error) {
-    //   showNotification({
-    //     title: 'Error',
-    //     message: 'Failed to delete data',
-    //     color: 'red',
-    //   });
-    // }
+    try {
+      const result = await adminService.update_user({
+        id,
+        status_active: 0
+      });
+
+      if (result == 'OK') {
+        showNotification({
+          title: 'Success',
+          message: 'Data Has Been Deleted',
+          color: 'green',
+        });
+        loadUsers();
+      } else {
+        showNotification({
+          title: 'Error',
+          message: 'Failed to delete data',
+          color: 'red',
+        });
+      }
+
+    } catch (error) {
+      showNotification({
+        title: 'Error',
+        message: 'Failed to delete data',
+        color: 'red',
+      });
+    }
   };
 
   const handleAmount = (value) => {

@@ -186,6 +186,7 @@ export class AuthService {
       'CASE WHEN user.face_id IS NOT NULL THEN 1 ELSE 0 END',
       'face_id'
     );
+    datadb.where('user.status_active = 1')
     if(search){
       datadb.where('(username ILIKE :search OR name ILIKE :search)', {search: `%${search}%`})
     }

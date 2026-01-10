@@ -18,11 +18,8 @@ export class User {
   @Column({ type: 'int4', nullable: true, default: 0 })
   role: number;
 
-  // @Column({ type: 'jsonb', nullable: true, default: null })
-  // face_id: string;
-
-  // @Column({ name: "face_id",type: 'jsonb', nullable: true, default: null })
-  // faceDescriptor: number[];
+  @Column({ type: 'int4', nullable: true, default: 1 })
+  status_active: number;
 
   @Column({ type: 'jsonb', nullable: true, default: null })
   face_id: number[];

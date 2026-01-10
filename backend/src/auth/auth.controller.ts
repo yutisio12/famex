@@ -116,7 +116,7 @@ export class AuthController{
   @Patch('update_profile')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async update_profile( @Req() req, @Body() updateDTO: { name: string, face_id?: number[] } ){
+  async update_profile( @Req() req, @Body() updateDTO: { name: string, face_id?: number[], status_active?: number } ){
     const profile = await this.authService.findOneCustom({id: req.user.id})
 
     if (!profile) {
@@ -124,6 +124,23 @@ export class AuthController{
     }
     
     const updating = await this.authService.updateUserByUser(req.user.id, updateDTO)
+
+    return updating
+  }
+
+  @Patch('update_user')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiBearerAuth()
+  async update_user( @Body() updateDTO: { id: number, name: string, face_id?: number[], status_active?: number } ){
+    const profile = await this.authService.findOneCustom({id: updateDTO.id})
+
+    if (!profile) {
+      throw new NotFoundException('User not found');
+    }
+    const { id, ...formData } = updateDTO
+    const updating = await this.authService.updateUserByAdmin(id, formData)
 
     return updating
   }
@@ -186,6 +203,7 @@ export class AuthController{
   @ApiOperation({ summary: 'Get User List' })
   @ApiResponse({ status: 200, description: 'User List' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiBearerAuth()
   findAll(@Query() query: PaginationQueryDto, ) {
     return this.authService.findAll(query);
   }
