@@ -21,7 +21,7 @@ const UserForm = ({ onSuccess, editData }) => {
       name: '',
       username: '',
       password: '',
-      role: '2'
+      role: 2
     },
     validate: {
       name: (value) => (value.length < 3 ? 'Nama too short' : null),
@@ -35,7 +35,7 @@ const UserForm = ({ onSuccess, editData }) => {
     if (editData) {
       form.setValues({
         ...editData,
-        role: String(editData.role ?? '2')
+        role: editData.role ?? 2
       });
 
     }
@@ -45,20 +45,11 @@ const UserForm = ({ onSuccess, editData }) => {
     setLoading(true);
 
     try {
-      const item = {
+      const payload = {
         name: values.name,
         username: values.username,
         password: values.password,
         role: parseInt(values.role, 10) || 2,
-      };
-
-      const payload = [item];
-      const payloadUpdate = {
-        type: item.type,
-        category_id: item.category_id,
-        amount: item.amount,
-        description: item.description,
-        expense_date: item.expense_date,
       };
 
       // if (editData) {
@@ -71,8 +62,8 @@ const UserForm = ({ onSuccess, editData }) => {
       // } else {
       await adminService.add_user(payload);
       showNotification({
-        title: 'Sukses',
-        message: 'Pengeluaran berhasil ditambahkan',
+        title: 'Success',
+        message: 'User added successfully',
         color: 'green',
       });
       // }
@@ -83,7 +74,7 @@ const UserForm = ({ onSuccess, editData }) => {
       console.log("err:", error)
       showNotification({
         title: 'Error',
-        message: 'Terjadi kesalahan',
+        message: 'Something went wrong',
         color: 'red',
       });
     }
@@ -118,8 +109,8 @@ const UserForm = ({ onSuccess, editData }) => {
         <Select
           label="Role"
           data={[
-            { value: '2', label: 'User' },
-            { value: '1', label: 'Admin' }
+            { value: 2, label: 'User' },
+            { value: 1, label: 'Admin' }
           ]}
           {...form.getInputProps('role')}
           mb="md"

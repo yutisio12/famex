@@ -18,11 +18,14 @@ export class User {
   @Column({ type: 'int4', nullable: true, default: 0 })
   role: number;
 
-  @Column({ type: 'jsonb', nullable: true, default: null })
-  face_id: string;
+  // @Column({ type: 'jsonb', nullable: true, default: null })
+  // face_id: string;
 
-  @Column({ name: "face_id",type: 'jsonb', nullable: true, default: null })
-  faceDescriptor: number[];
+  // @Column({ name: "face_id",type: 'jsonb', nullable: true, default: null })
+  // faceDescriptor: number[];
+
+  @Column({ type: 'jsonb', nullable: true, default: null })
+  face_id: number[];
 
   @OneToMany(() => Expense, (expense) => expense.user)
   expenses: Expense[];

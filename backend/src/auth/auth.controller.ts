@@ -116,7 +116,7 @@ export class AuthController{
   @Patch('update_profile')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async update_profile( @Req() req, @Body() updateDTO: { name: string, face_id?: string } ){
+  async update_profile( @Req() req, @Body() updateDTO: { name: string, face_id?: number[] } ){
     const profile = await this.authService.findOneCustom({id: req.user.id})
 
     if (!profile) {

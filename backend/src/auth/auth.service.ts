@@ -63,14 +63,14 @@ export class AuthService {
       where: {
         face_id: Not(IsNull()),
       },
-      select: ['id', 'faceDescriptor', 'username', 'role'],
+      select: ['id', 'face_id', 'username', 'role'],
     });
     
     let bestMatch: User | null = null;
     let minDistance = Infinity;
 
     for (const user of users) {
-      const storedDescriptor: number[] = user.faceDescriptor;
+      const storedDescriptor: number[] = user.face_id;
 
       const distance = this.euclideanDistance(inputDescriptor, storedDescriptor);
 
@@ -111,8 +111,8 @@ export class AuthService {
       ...formData,
       password: passwordEnc
     })
-
     const insertedUser = await this.userRepository.save(user)
+    // return insertedUser // for debug purpose
     const userObj = Array.isArray(insertedUser) ? insertedUser[0] : insertedUser;
     const { password, ...result } = userObj;
     return result
