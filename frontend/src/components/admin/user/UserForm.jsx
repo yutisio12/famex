@@ -31,9 +31,22 @@ const UserForm = ({ onSuccess, editData }) => {
     },
   });
 
+  const formEdit = useForm({
+    initialValues: {
+      name: '',
+      username: '',
+      role: 2
+    },
+    validate: {
+      name: (value) => (value.length < 3 ? 'Nama too short' : null),
+      username: (value) => (value.length < 3 ? 'Username too short' : null),
+      role: (value) => (!value ? 'Select role' : null),
+    },
+  });
+
   useEffect(() => {
     if (editData) {
-      form.setValues({
+      formEdit.setValues({
         ...editData,
         role: editData.role ?? 2
       });
@@ -45,57 +58,67 @@ const UserForm = ({ onSuccess, editData }) => {
     setLoading(true);
 
     try {
-      const payload = {
+      let payload = {
         name: values.name,
         username: values.username,
         password: values.password,
         role: parseInt(values.role, 10) || 2,
       };
 
-      // if (editData) {
-      //   await adminService.update(editData.id, payloadUpdate);
-      //   showNotification({
-      //     title: 'Sukses',
-      //     message: 'Pengeluaran berhasil diupdate',
-      //     color: 'green',
-      //   });
-      // } else {
-      const result = await adminService.add_user(payload);
+      if (editData) {
+        const { password, ...payloadEdit } = payload;
+        const result = await adminService.update_user({ id: editData.id, ...payloadEdit });
+        if (result != 'OK') {
+          showNotification({
+            title: 'Error',
+            message: result.message,
+            color: 'red',
+          });
 
-      if (!result.id) {
+          setLoading(false);
+          return
+        }
         showNotification({
-          title: 'Error',
-          message: result.message,
-          color: 'red',
+          title: 'Success',
+          message: 'User updated successfully',
+          color: 'green',
         });
+      } else {
+        const result = await adminService.add_user(payload);
 
-        if (result.statusCode == 409) {
-          form.setValues({
-            username: ''
-          })
-          form.setErrors({
-            username: result.message
-          })
+        if (!result.id) {
+          showNotification({
+            title: 'Error',
+            message: result.message,
+            color: 'red',
+          });
+
+          if (result.statusCode == 409) {
+            form.setValues({
+              username: ''
+            })
+            form.setErrors({
+              username: result.message
+            })
+          }
+
+          setLoading(false);
+          return
         }
 
-        setLoading(false);
-        return
+        showNotification({
+          title: 'Success',
+          message: 'User added successfully',
+          color: 'green',
+        });
       }
-
-      showNotification({
-        title: 'Success',
-        message: 'User added successfully',
-        color: 'green',
-      });
-      // }
 
       form.reset();
       onSuccess?.();
     } catch (error) {
-      console.log("err:", error)
       showNotification({
         title: 'Error',
-        message: 'Something went wrong',
+        message: error.response.data.message || 'Something went wrong',
         color: 'red',
       });
     }
@@ -105,27 +128,28 @@ const UserForm = ({ onSuccess, editData }) => {
 
   return (
     <Box>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={editData ? formEdit.onSubmit(handleSubmit) : form.onSubmit(handleSubmit)}>
         <TextInput
           label="Name"
           placeholder="Enter name"
-          {...form.getInputProps('name')}
+          {...editData ? formEdit.getInputProps('name') : form.getInputProps('name')}
           mb="md"
         />
 
         <TextInput
           label="Username"
           placeholder="Enter Username"
-          {...form.getInputProps('username')}
+          {...editData ? formEdit.getInputProps('username') : form.getInputProps('username')}
           mb="md"
         />
-
-        <PasswordInput
-          label="Password"
-          placeholder="Enter Password"
-          {...form.getInputProps('password')}
-          mb="md"
-        />
+        {editData ? null : (
+          <PasswordInput
+            label="Password"
+            placeholder="Enter Password"
+            {...editData ? formEdit.getInputProps('password') : form.getInputProps('password')}
+            mb="md"
+          />
+        )}
 
         <Select
           label="Role"

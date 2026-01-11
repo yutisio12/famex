@@ -133,12 +133,17 @@ export class AuthController{
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiBearerAuth()
-  async update_user( @Body() updateDTO: { id: number, name: string, face_id?: number[], status_active?: number } ){
+  async update_user( @Body() updateDTO: { id: number, name: string, username?: string, face_id?: number[], status_active?: number } ){
     const profile = await this.authService.findOneCustom({id: updateDTO.id})
-
     if (!profile) {
       throw new NotFoundException('User not found');
     }
+
+    const checkUsn = await this.authService.findOneCustom({username: updateDTO.username})
+    if (checkUsn) {
+      throw new BadRequestException('Username already exists, please use another username/email');
+    }
+
     const { id, ...formData } = updateDTO
     const updating = await this.authService.updateUserByAdmin(id, formData)
 
