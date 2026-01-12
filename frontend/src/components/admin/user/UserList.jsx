@@ -31,7 +31,7 @@ const UserList = ({ setModal }) => {
 
       const data = await adminService.user_list({
         page: 1,
-        limit: 100,
+        limit: 10,
         // search: filters.search || '',
         sort: 'id,ASC',
         // customWhere: filters.customWhere || {},
