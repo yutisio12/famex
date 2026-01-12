@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import {
   Table,
   ActionIcon,
@@ -16,43 +16,97 @@ import { showNotification } from '@mantine/notifications';
 import { expensesService } from '../../services/expenses';
 import ExpenseForm from './ExpenseForm';
 import { useDecimal } from '../../hooks/useDecimal';
+import DataTable from '../../components/helper_component/DataTable';
 
-const ExpenseList = ({ setModal }) => {
-  const [expenses, setExpenses] = useState([]);
+const ExpenseList = forwardRef(({ setModal }, ref) => {
   const [loading, setLoading] = useState(true);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
-  const { sumDecimals, formatDisplay, cleanDecimal } = useDecimal()
+  const dataTableRef = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    reloadData: () => {
+      if (dataTableRef.current?.loadData) {
+        dataTableRef.current.loadData();
+      }
+    }
+  }));
+
+  const columns = [
+    {
+      accessorKey: "expenses_id",
+      header: "No",
+      cell: info => info.row.index + 1,
+    },
+    {
+      accessorKey: "type",
+      header: "Type",
+      cell: info => (
+        <Badge color={info.getValue() === 2 ? 'green' : 'red'}>
+          {info.getValue() === 2 ? 'Income' : 'Expense'}
+        </Badge>
+      ),
+    },
+
+    {
+      accessorKey: "category.name",
+      header: "Category",
+      cell: info => <Text style={{ fontWeight: 'bold' }}>{info.getValue()}</Text>,
+    },
+    {
+      accessorKey: "description",
+      header: "Description",
+      cell: info => <Text weight={500}>{info.getValue()}</Text>,
+    },
+    {
+      accessorKey: "amount",
+      header: "Amount",
+      cell: info => <Text style={{ fontWeight: 'bold' }}>Rp. {handleAmount(info.getValue())}</Text>,
+    },
+    {
+      accessorKey: "expense_date",
+      header: "Expense Date",
+      cell: info => <Text style={{ fontWeight: 'bold' }}>{new Date(info.getValue()).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })}</Text>,
+    },
+
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <Group spacing="xs" position="center">
+          <ActionIcon color="blue" onClick={() => handleEdit(row.original)}>
+            <IconEdit size="1rem" />
+          </ActionIcon>
+          <ActionIcon color="red" onClick={() => handleDelete(row.original.id)}>
+            <IconTrash size="1rem" />
+          </ActionIcon>
+        </Group>
+      ),
+    },
+  ]
+
+  const fetchExpenses = async ({ page, limit, sort, search }) => {
+    const data = await expensesService.getDataTable({
+      page,
+      limit,
+      sort,
+      search,
+    })
+    setLoading(false)
+    return data
+  }
 
   useEffect(() => {
-    loadExpenses();
+    fetchExpenses({
+      page: 1,
+      limit: 10,
+      sort: 'expenses_id,DESC',
+    })
   }, []);
-
-  const loadExpenses = async () => {
-    try {
-      // const data = await expensesService.getDataTable();
-
-      // const data = await expensesService.getAll();
-      // setExpenses(data);
-
-      const data = await expensesService.getDataTable({
-        page: 1,
-        limit: 100,
-        // search: filters.search || '',
-        sort: 'expenses_id,DESC',
-        // customWhere: filters.customWhere || {},
-      });
-      setExpenses(data.data);
-    } catch (error) {
-      showNotification({
-        title: 'Error',
-        message: 'Failed to load expense data',
-        color: 'red',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async (id) => {
     try {
@@ -62,7 +116,7 @@ const ExpenseList = ({ setModal }) => {
         message: 'Data Has Been Deleted',
         color: 'green',
       });
-      loadExpenses();
+      // loadExpenses();
     } catch (error) {
       showNotification({
         title: 'Error',
@@ -75,13 +129,9 @@ const ExpenseList = ({ setModal }) => {
   const handleAmount = (value) => {
     if (!value) return '';
 
-    // Ambil hanya angka dan titik
     const clean = value.replace(/[^0-9.]/g, '');
-
-    // Ambil hanya bagian sebelum desimal
     const integerPart = clean.split('.')[0];
 
-    // Format ribuan
     return integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   };
 
@@ -90,45 +140,6 @@ const ExpenseList = ({ setModal }) => {
     setEditModalOpen(true);
   };
 
-  const rows = expenses.map((expense) => (
-    <tr key={expense.id}>
-      <td>
-        <Badge color={expense.type === 2 ? 'green' : 'red'}>
-          {expense.type === 2 ? 'Income' : 'Expense'}
-        </Badge>
-      </td>
-      <td>
-        {/* <Text>{expense.category?.name}</Text> */}
-        {/* <Text>{expense.category_id}</Text> */}
-        <Text style={{ fontWeight: 'bold' }}>{expense.category.name}</Text>
-      </td>
-      <td>
-        <Text weight={500}>{expense.description}</Text>
-      </td>
-      <td>
-        {/* <Text>Rp {cleanDecimal(expense.amount?.toLocaleString())}</Text> */}
-        <Text>Rp <strong>{handleAmount(expense.amount)}</strong></Text>
-      </td>
-      <td>
-        <Text>{new Date(expense.expense_date).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-        })}</Text>
-      </td>
-      <td>
-        <Group spacing="xs">
-          <ActionIcon color="blue" onClick={() => handleEdit(expense)}>
-            <IconEdit size="1rem" />
-          </ActionIcon>
-          <ActionIcon color="red" onClick={() => handleDelete(expense.id)}>
-            <IconTrash size="1rem" />
-          </ActionIcon>
-        </Group>
-      </td>
-    </tr>
-  ));
-
   if (loading) {
     return <Text>Loading data...</Text>;
   }
@@ -136,30 +147,6 @@ const ExpenseList = ({ setModal }) => {
   return (
     <>
       <ScrollArea>
-        {/* <Group position="apart" mb="xl">
-          <Title order={1}>List</Title>
-          <Button
-            color='green'
-            leftIcon={<IconRefresh size="1rem" />}
-            onClick={loadExpenses}
-            loading={loading}
-          >
-            Refresh
-          </Button>
-        </Group>
-        <Table verticalSpacing="sm">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{rows}</tbody>
-        </Table> */}
 
         <Card shadow="md" radius="lg" withBorder>
           <Card.Section withBorder inheritPadding py="sm">
@@ -176,7 +163,7 @@ const ExpenseList = ({ setModal }) => {
                 <Button
                   color='blue'
                   leftIcon={<IconRefresh size="1rem" />}
-                  onClick={loadExpenses}
+                  onClick={() => dataTableRef.current?.loadData()}
                   loading={loading}
                 >
                   Refresh
@@ -186,26 +173,8 @@ const ExpenseList = ({ setModal }) => {
           </Card.Section>
 
           <Card.Section inheritPadding py="md">
-            <Table verticalSpacing="sm">
-              <thead>
-                <tr>
-                  <th>Type</th>
-                  <th>Category</th>
-                  <th>Description</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>{rows}</tbody>
-            </Table>
+            <DataTable ref={dataTableRef} columns={columns} fetchData={fetchExpenses} />
           </Card.Section>
-          {/* <Card.Section inheritPadding py="sm" withBorder>
-            <Group justify="flex-end">
-              <Button variant="subtle">Cancel</Button>
-              <Button>Save</Button>
-            </Group>
-          </Card.Section> */}
         </Card>
 
       </ScrollArea>
@@ -220,12 +189,12 @@ const ExpenseList = ({ setModal }) => {
           editData={selectedExpense}
           onSuccess={() => {
             setEditModalOpen(false);
-            loadExpenses();
+            dataTableRef.current?.loadData();
           }}
         />
       </Modal>
     </>
   );
-};
+});
 
 export default ExpenseList;

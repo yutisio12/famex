@@ -75,7 +75,7 @@ export class ExpenseService {
     datadb.leftJoinAndSelect('expenses.category', 'category');
     datadb.where({status_delete: 0})
     if(search){
-      datadb.where('description ILIKE :search', {search: `%${search}%`})
+      datadb.andWhere('description ILIKE :search', {search: `%${search}%`})
     }
     if (customWhere) {
       Object.keys(customWhere).forEach((key) => {
@@ -87,8 +87,11 @@ export class ExpenseService {
         }
       });
     }
-    if(sort){
-      const [sortBy, sortType] = sort.split(',')
+    if(sort && sort !== null){
+      let [sortBy, sortType] = sort.split(',')
+      if(sortBy == 'id'){
+        sortBy = 'expenses_id'
+      }
       datadb.orderBy(`${sortBy}`, sortType.toUpperCase() === 'DESC' ? 'DESC' : 'ASC')
     }
     datadb.skip((page - 1) * limit).take(limit);
