@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Modal } from '@mantine/core';
 import UserForm from '../components/admin/user/UserForm';
 import UserList from '../components/admin/user/UserList';
@@ -7,18 +7,21 @@ import { useDecimal } from '../hooks/useDecimal';
 
 const Admin = () => {
   const [formModalOpen, setFormModalOpen] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const userListRef = useRef(null);
   const { sumDecimals, formatDisplay, cleanDecimal } = useDecimal()
 
   const handleSuccess = () => {
     setFormModalOpen(false);
-    setRefreshKey(prev => prev + 1); // Force re-render ExpenseList
+    // Reload data using UserList's reloadData function
+    if (userListRef.current?.reloadData) {
+      userListRef.current.reloadData();
+    }
   };
 
   return (
     <div>
 
-      <UserList key={refreshKey} setModal={setFormModalOpen} />
+      <UserList ref={userListRef} setModal={setFormModalOpen} />
 
       <Modal
         opened={formModalOpen}

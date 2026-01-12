@@ -5,6 +5,7 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
 import { LoginDto } from "./dto/login.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiCookieAuth, ApiBody } from "@nestjs/swagger";
 import { PaginationQueryDto } from 'src/pagination/pagination-query.dto';
+import { Not } from "typeorm";
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -139,7 +140,10 @@ export class AuthController{
       throw new NotFoundException('User not found');
     }
 
-    const checkUsn = await this.authService.findOneCustom({username: updateDTO.username})
+    const checkUsn = await this.authService.findOneCustom({
+      username: updateDTO.username,
+      id: Not(updateDTO.id)
+    })
     if (checkUsn) {
       throw new BadRequestException('Username already exists, please use another username/email');
     }
