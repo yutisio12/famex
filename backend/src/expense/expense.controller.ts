@@ -43,8 +43,18 @@ export class ExpenseController {
   }
 
   @Get()
-  findAll(@Query() query: PaginationQueryDto, ) {
+  findAll(
+    @Query() query: PaginationQueryDto, 
+  ) {
     return this.expenseService.findAll(query);
+  }
+
+  @Get('me')
+  findAllTransUser(
+    @Query() query: PaginationQueryDto,
+    @GetUser() user: User,
+  ) {
+    return this.expenseService.findAll(query, { user_id: user.id });
   }
 
   @Get('category')
