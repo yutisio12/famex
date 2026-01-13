@@ -22,6 +22,11 @@ export const expensesService = {
   },
 
   getDataTable: async (params = {}) => {
+    const response = await api.get('/expenses/me', { params })
+    return response.data
+  },
+
+  getAllDataTable: async (params = {}) => {
     const response = await api.get('/expenses', { params })
     return response.data
   },
@@ -29,7 +34,7 @@ export const expensesService = {
   category: async () => {
     const response = await api.get('/expenses/category')
     return response.data
-  }, 
+  },
 
   create: async (formData) => {
     const response = await api.post('/expenses', formData)

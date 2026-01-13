@@ -1,16 +1,16 @@
 // import React from "react";
-import { NavLink, Stack } from '@mantine/core'
+import { NavLink, Stack, MediaQuery } from '@mantine/core'
 import {
   IconDashboard,
   IconCash,
   IconFaceId,
   IconUser,
-  // IconLogout
+  IconLogout
 } from '@tabler/icons-react'
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-const Navigation = () => {
+const Navigation = ({ opened = true }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const { logout } = useAuth()
@@ -23,25 +23,32 @@ const Navigation = () => {
   ]
 
   return (
-    <Stack spacing={0} p="md">
-      {menuItems.map((item) => (
-        <NavLink
-          key={item.path}
-          active={location.pathname === item.path}
-          label={item.label}
-          icon={<item.icon size="1rem" />}
-          onClick={() => navigate(item.path)}
-          style={{
-            border: location.pathname === item.path ? '1px solid #dee2e6' : 'none'
-          }}
-        />
-      ))}
-      {/* <NavLink
-        label="logout"
-        icon={<IconLogout size="1rem" />}
-        onClick={logout}
-      /> */}
-    </Stack>
+    opened ? (
+      <Stack spacing={0} p="md" bg="white">
+        {menuItems.map((item) => (
+          <NavLink
+            key={item.path}
+            active={location.pathname === item.path}
+            label={opened ? item.label : ''}
+            icon={<item.icon size="1rem" />}
+            onClick={() => navigate(item.path)}
+            style={{
+              border: location.pathname === item.path ? '1px solid #dee2e6' : 'none',
+              justifyContent: opened ? 'flex-start' : 'center',
+              padding: opened ? undefined : '10px'
+            }}
+            title={!opened ? item.label : undefined}
+          />
+        ))}
+        <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+          <NavLink
+            label="Logout"
+            icon={<IconLogout size="1rem" />}
+            onClick={logout}
+          />
+        </MediaQuery>
+      </Stack>
+    ) : ''
   )
 
 }
