@@ -15,11 +15,13 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [fullName, setFullName] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [role, setRole] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
     const userData = localStorage.getItem('user')
     const nameX = localStorage.getItem('name')
+    const roleUser = localStorage.getItem('role')
 
     // guard against stringified 'undefined' or 'null' values
     const validToken = token && token !== 'undefined' && token !== 'null'
@@ -28,6 +30,9 @@ export const AuthProvider = ({ children }) => {
     }
     if (validToken && nameX) {
       setFullName(JSON.parse(nameX))
+    }
+    if (validToken && roleUser) {
+      setRole(JSON.parse(roleUser))
     }
     setLoading(false)
   }, [])
@@ -40,6 +45,7 @@ export const AuthProvider = ({ children }) => {
       const {
         user: userData,
         name: nameX,
+        role: roleUser,
         access_token,
         accessToken,
         token: tokenField,
@@ -63,6 +69,11 @@ export const AuthProvider = ({ children }) => {
       if (nameX) {
         localStorage.setItem('name', JSON.stringify(nameX))
         setFullName(nameX)
+      }
+
+      if (roleUser) {
+        localStorage.setItem('role', JSON.stringify(roleUser))
+        setRole(roleUser)
       }
 
       return { success: true }
@@ -82,6 +93,7 @@ export const AuthProvider = ({ children }) => {
       const {
         user: userData,
         name: nameX,
+        role: roleUser,
         access_token,
         accessToken,
         token: tokenField,
@@ -105,6 +117,11 @@ export const AuthProvider = ({ children }) => {
       if (nameX) {
         localStorage.setItem('name', JSON.stringify(nameX))
         setFullName(nameX)
+      }
+
+      if (roleUser) {
+        localStorage.setItem('role', JSON.stringify(roleUser))
+        setRole(roleUser)
       }
 
       return { success: true }
@@ -125,6 +142,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     fullName,
+    role,
     login,
     face_login,
     logout,

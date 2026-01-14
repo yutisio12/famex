@@ -144,7 +144,8 @@ export class AuthController{
       username: updateDTO.username,
       id: Not(updateDTO.id)
     })
-    if (checkUsn) {
+    
+    if (checkUsn && typeof updateDTO.status_active == "undefined") {
       throw new BadRequestException('Username already exists, please use another username/email');
     }
 

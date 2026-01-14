@@ -13,14 +13,28 @@ import { useAuth } from "../../context/AuthContext";
 const Navigation = ({ opened = true }) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { logout } = useAuth()
+  const { logout, role } = useAuth()
 
-  const menuItems = [
+  let menuItems = [
     { icon: IconDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: IconCash, label: 'Expense', path: '/expenses' },
     { icon: IconFaceId, label: 'Profile', path: '/profile' },
     { icon: IconUser, label: 'User', path: '/admin/user' },
   ]
+
+  const adminIndex = [0, 1, 2, 3];
+  const staffIndex = [0, 1, 2];
+  
+  if(role == 2){
+    menuItems = menuItems.filter((_, index) => 
+      staffIndex.includes(index)
+    );
+  } else if(role == 1){
+    menuItems = menuItems.filter((_, index) => 
+      adminIndex.includes(index)
+    );
+  }
+
 
   return (
     opened ? (
