@@ -6,6 +6,7 @@ import { LoginDto } from "./dto/login.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiCookieAuth, ApiBody } from "@nestjs/swagger";
 import { PaginationQueryDto } from 'src/pagination/pagination-query.dto';
 import { Not } from "typeorm";
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -13,6 +14,7 @@ export class AuthController{
   constructor(private authService: AuthService){}
 
   @Post('login')
+  @Throttle({ global: { limit: 5, ttl: 60000 } })
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   async login(
@@ -171,6 +173,7 @@ export class AuthController{
   }
 
   @Post('face_login')
+  @Throttle({ global: { limit: 5, ttl: 60000 } })
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   async face_login(

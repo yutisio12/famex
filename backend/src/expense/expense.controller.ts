@@ -17,6 +17,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { User } from '../entities/user.auth.entity';
 import { ApiBearerAuth, ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PaginationQueryDto } from 'src/pagination/pagination-query.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('Expenses')
 @ApiBearerAuth('access-token') // sesuai nama di main.ts
@@ -49,6 +50,7 @@ export class ExpenseController {
     return this.expenseService.findAll(query);
   }
 
+  @Throttle({ user: {  } })
   @Get('me')
   findAllTransUser(
     @Query() query: PaginationQueryDto,

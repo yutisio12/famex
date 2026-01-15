@@ -4,14 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { getAuthDbConfig, getEmployeeDbConfig } from './config/database.config';
-import { EmployeeModule } from './employee/employee.module';
 import { ExpenseModule } from './expense/expense.module';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { UserThrottlerGuard } from './throttlers/user-throttler.guard';
 
 @Module({
   imports: [
     ExpenseModule,
-    EmployeeModule,
-    EmployeeModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -32,7 +32,26 @@ import { ExpenseModule } from './expense/expense.module';
     }),
     CommonModule,
     AuthModule,
-    EmployeeModule,
+    ThrottlerModule.forRoot([
+      {
+        name: 'global',
+        ttl: 60000,        // 60 detik
+        limit: 100,     // 100 request / menit per IP
+      },
+      {
+        name: 'user',
+        ttl: 60000,
+        limit: 30,
+      },
+    ]),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      // useClass: ThrottlerGuard,
+      useClass: UserThrottlerGuard,
+
+    },
   ],
 })
 export class AppModule {}
