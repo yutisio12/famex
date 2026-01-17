@@ -62,7 +62,12 @@ const Header = ({ onToggle, opened }) => {
           <Button
             variant="light"
             onClick={logout}
-            leftIcon={<IconLogout size="1rem" />}
+            leftIcon={<IconLogout color="#b60d0dff" size="1rem" />}
+            style={{
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
+              color: '#b60d0dff',
+              borderRadius: '5px',
+            }}
           >
             Logout
           </Button>

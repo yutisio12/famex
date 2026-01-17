@@ -24,13 +24,13 @@ const Navigation = ({ opened = true }) => {
 
   const adminIndex = [0, 1, 2, 3];
   const staffIndex = [0, 1, 2];
-  
-  if(role == 2){
-    menuItems = menuItems.filter((_, index) => 
+
+  if (role == 2) {
+    menuItems = menuItems.filter((_, index) =>
       staffIndex.includes(index)
     );
-  } else if(role == 1){
-    menuItems = menuItems.filter((_, index) => 
+  } else if (role == 1) {
+    menuItems = menuItems.filter((_, index) =>
       adminIndex.includes(index)
     );
   }
@@ -54,11 +54,20 @@ const Navigation = ({ opened = true }) => {
             title={!opened ? item.label : undefined}
           />
         ))}
-        <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+        <MediaQuery
+          largerThan="sm"
+        // styles={{ display: 'none' }}
+        >
           <NavLink
             label="Logout"
-            icon={<IconLogout size="1rem" />}
+            icon={<IconLogout size="1rem" color="#b60d0dff" />}
             onClick={logout}
+            style={{
+              boxShadow: '0 0 10px rgba(172, 18, 18, 0.2)',
+              color: '#b60d0dff',
+              borderRadius: '5px',
+              marginTop: '10px',
+            }}
           />
         </MediaQuery>
       </Stack>
