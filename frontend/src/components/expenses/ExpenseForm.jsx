@@ -120,16 +120,16 @@ const ExpenseForm = ({ onSuccess, editData }) => {
         // console.log("Pl:", editData)
         await expensesService.update(editData.id, payloadUpdate);
         showNotification({
-          title: 'Sukses',
-          message: 'Pengeluaran berhasil diupdate',
+          title: 'Success',
+          message: 'Expense updated successfully',
           color: 'green',
         });
         // return // belum dibuat updatenya
       } else {
         await expensesService.create(payload);
         showNotification({
-          title: 'Sukses',
-          message: 'Pengeluaran berhasil ditambahkan',
+          title: 'Success',
+          message: 'Expense added successfully',
           color: 'green',
         });
       }
@@ -140,7 +140,7 @@ const ExpenseForm = ({ onSuccess, editData }) => {
       console.log("err:", error)
       showNotification({
         title: 'Error',
-        message: 'Terjadi kesalahan',
+        message: 'An error occurred',
         color: 'red',
       });
     }
@@ -152,8 +152,8 @@ const ExpenseForm = ({ onSuccess, editData }) => {
     <Box>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <NumberInput
-          label="Jumlah"
-          placeholder="Masukkan jumlah"
+          label="Amount"
+          placeholder="Enter amount"
           min={0}
           // precision={2}
           disableScrollWheel
@@ -171,32 +171,32 @@ const ExpenseForm = ({ onSuccess, editData }) => {
         />
 
         <Textarea
-          label="Deskripsi"
-          placeholder="Deskripsi pengeluaran"
+          label="Description"
+          placeholder="Enter description"
           {...form.getInputProps('description')}
           mb="md"
         />
 
 
         <DatePicker
-          label="Tanggal"
+          label="ExpenseDate"
           {...form.getInputProps('expense_date')}
           mb="md"
         />
 
         <Select
-          label="Tipe"
+          label="Type"
           data={[
-            { value: '1', label: 'Pengeluaran' },
-            { value: '2', label: 'Pemasukan' }
+            { value: '1', label: 'Expense' },
+            { value: '2', label: 'Income' }
           ]}
           {...form.getInputProps('type')}
           mb="md"
         />
 
         <Select
-          label="Kategori"
-          placeholder="Pilih kategori"
+          label="Category"
+          placeholder="Select category"
           data={categories.map(cat => ({ value: cat.id.toString(), label: cat.name }))}
           {...form.getInputProps('category_id')}
           mb="md"
@@ -204,7 +204,7 @@ const ExpenseForm = ({ onSuccess, editData }) => {
 
         <Group position="right">
           <Button type="submit" loading={loading}>
-            {editData ? 'Update' : 'Tambah'} Pengeluaran
+            {editData ? 'Update' : 'Add'} Expense
           </Button>
         </Group>
       </form>
