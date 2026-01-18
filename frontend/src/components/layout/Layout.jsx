@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { AppShell } from '@mantine/core';
 import Header from './Header';
 import Navigation from './Navigation';
@@ -11,11 +12,28 @@ const Layout = ({ children }) => {
     setOpened((prev) => !prev);
   };
 
+  function useIsMobile(breakpoint = 768) {
+    const [isMobile, setIsMobile] = useState(
+      window.matchMedia(`(max-width: ${breakpoint}px)`).matches
+    );
+
+    useEffect(() => {
+      const media = window.matchMedia(`(max-width: ${breakpoint}px)`);
+
+      const listener = () => setIsMobile(media.matches);
+      media.addEventListener("change", listener);
+
+      return () => media.removeEventListener("change", listener);
+    }, [breakpoint]);
+
+    return isMobile;
+  }
+
   return (
     <AppShell
-      navbar={<Navigation opened={opened} />}
-      header={<Header opened={opened} onToggle={toggleNavigation} />}
-      footer={<Footer />}
+      navbar={<Navigation opened={opened} onClose={() => setOpened(false)} isMobile={useIsMobile()} />}
+      header={< Header opened={opened} onToggle={toggleNavigation} />}
+      footer={< Footer />}
       padding="md"
       style={{
         minHeight: '100vh',
@@ -24,10 +42,10 @@ const Layout = ({ children }) => {
       }}
     >
       {/* Children content */}
-      <div style={{ minHeight: 'calc(100vh - 100px)' }}>
+      < div style={{ minHeight: 'calc(100vh - 100px)' }}>
         {children}
-      </div>
-    </AppShell>
+      </div >
+    </AppShell >
   );
 };
 
