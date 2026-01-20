@@ -10,7 +10,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-const Navigation = ({ opened = true, onClose, isMobile }) => {
+const Navigation = ({ opened = false, onClose, isMobile }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const { logout, role } = useAuth()
@@ -39,7 +39,7 @@ const Navigation = ({ opened = true, onClose, isMobile }) => {
 
   return (
     <Wrapper
-      opened={isMobile ? opened : undefined}
+      opened={opened}
       onClose={isMobile ? onClose : undefined}
       size={isMobile ? "md" : undefined}
       position={isMobile ? "left" : undefined}

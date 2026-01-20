@@ -6,7 +6,7 @@ import Navigation from './Navigation';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {
-  const [opened, setOpened] = useState(true);
+  const [opened, setOpened] = useState(false);
 
   const toggleNavigation = () => {
     setOpened((prev) => !prev);
