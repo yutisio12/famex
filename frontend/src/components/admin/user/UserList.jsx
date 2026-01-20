@@ -74,14 +74,31 @@ const UserList = forwardRef(({ setModal }, ref) => {
   ]
 
   const fetchUsers = async ({ page, limit, sort, search }) => {
-    const data = await adminService.user_list({
-      page,
-      limit,
-      sort,
-      search,
-    })
-    setLoading(false)
-    return data
+    let data = []
+    try {
+      data = await adminService.user_list({
+        page,
+        limit,
+        sort,
+        search,
+      })
+      setLoading(false)
+      return data
+    } catch (error) {
+      let err_message = error.response.data.message
+      showNotification({
+        title: 'Error',
+        message: err_message,
+        color: 'red',
+      });
+      setLoading(false)
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+      return data
+    }
+
+
   }
 
   useEffect(() => {

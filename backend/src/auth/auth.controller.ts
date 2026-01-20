@@ -2,11 +2,13 @@ import { Controller, Post, Body, Patch, Res, HttpStatus, UseGuards, Get, Req, No
 import type { Response, Request } from "express";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./jwt-auth.guard";
+import { RolesGuard } from "./role.guard";
 import { LoginDto } from "./dto/login.dto";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiCookieAuth, ApiBody } from "@nestjs/swagger";
 import { PaginationQueryDto } from 'src/pagination/pagination-query.dto';
 import { Not } from "typeorm";
 import { Throttle } from '@nestjs/throttler';
+import { Roles } from "./decorators/roles-decorator";
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -217,6 +219,8 @@ export class AuthController{
   @ApiResponse({ status: 200, description: 'User List' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(1)
   findAll(@Query() query: PaginationQueryDto, ) {
     return this.authService.findAll(query);
   }

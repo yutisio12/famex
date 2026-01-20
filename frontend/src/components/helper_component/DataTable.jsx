@@ -31,7 +31,7 @@ const DataTable = forwardRef(({
   const loadData = async () => {
     setLoading(true)
 
-    const sort = sorting.length > 0 ? `${sorting[0].id},${sorting[0].desc ? "DESC" : "ASC"}` : null
+    const sort = sorting?.length > 0 ? `${sorting[0].id},${sorting[0].desc ? "DESC" : "ASC"}` : null
     // alert(debouncedSearch)
     const res = await fetchData({
       page: pagination.pageIndex + 1,
