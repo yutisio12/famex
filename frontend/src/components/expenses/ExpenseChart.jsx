@@ -35,7 +35,7 @@ const ExpenseChart = () => {
     }
   };
 
-  const COLORS = ["#40C057", "#FA5252"];
+  const COLORS = ["#7048E8", "#BE4BDB"]; // Violet and Grape/Purple shades
   const renderCustomLabel = ({
     cx,
     cy,
@@ -45,7 +45,7 @@ const ExpenseChart = () => {
     value,
   }) => {
     const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.3;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.4;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
@@ -53,16 +53,14 @@ const ExpenseChart = () => {
       <text
         x={x}
         y={y}
-        textAnchor={x > cx ? "start" : "end"}
+        textAnchor="middle"
         dominantBaseline="central"
-        fontSize={16}
-        fontWeight={500}
         style={{
-          fill: '#ffffff',        /* warna text */
+          fill: '#ffffff',
           fontSize: '12px',
-          fontWeight: '600',
-          pointerEvents: 'none', /* biar hover pie ga keganggu */
-          textShadow: '0 1px 2px rgba(0, 0, 0, 0.4)',
+          fontWeight: '800',
+          pointerEvents: 'none',
+          textShadow: '1px 1px 2px rgba(0,0,0,0.8), 0 0 5px rgba(0,0,0,0.5)',
         }}
       >
         {`Rp ${value.toLocaleString("id-ID")}`}
@@ -71,34 +69,42 @@ const ExpenseChart = () => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <PieChart width={400} height={400}>
-        <Pie
-          data={chartData}
-          dataKey="value"
-          nameKey="name"
-          cx="50%"
-          cy="50%"
-          outerRadius={120}
-          label={renderCustomLabel}
-        >
-          {chartData.map((_, index) => (
-            <Cell key={index} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
-
-      {/* <LineChart data={chartData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="income" stroke="#4CAF50" name="Pemasukan" />
-        <Line type="monotone" dataKey="expense" stroke="#F44336" name="Pengeluaran" />
-      </LineChart> */}
-    </ResponsiveContainer>
+    <div style={{ width: '100%', height: 300, display: 'flex', justifyContent: 'center' }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={chartData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            innerRadius={60}
+            outerRadius={110}
+            paddingAngle={5}
+            label={renderCustomLabel}
+            stroke="none"
+          >
+            {chartData.map((_, index) => (
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip
+            contentStyle={{
+              borderRadius: '12px',
+              border: 'none',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+              padding: '10px'
+            }}
+          />
+          <Legend
+            verticalAlign="bottom"
+            height={36}
+            iconType="circle"
+            formatter={(value) => <span style={{ color: '#495057', fontWeight: 600, fontSize: '14px' }}>{value}</span>}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
