@@ -32,12 +32,12 @@ const Dashboard = () => {
 
   const loadDashboardData = async () => {
     try {
-      console.log('Loading dashboard data...');
+      // console.log('Loading dashboard data...');
       setLoading(true);
 
       // Test API connection
       const expenses = await expensesService.getAll();
-      console.log('Expenses data:', expenses);
+      // console.log('Expenses data:', expenses);
 
       const incomeTransactions = expenses.filter(e => e.type === 2)
       const expenseTransactions = expenses.filter(e => e.type === 1)
@@ -53,7 +53,7 @@ const Dashboard = () => {
       });
 
     } catch (error) {
-      console.error('Error loading dashboard data:', error);
+      // console.error('Error loading dashboard data:', error);
       // Set dummy data untuk testing
       setStats({
         totalIncome: 1000000,
@@ -185,16 +185,6 @@ const Dashboard = () => {
           </Card>
         </Grid.Col>
       </Grid>
-
-      {/* Debug Info */}
-      {/* <Card mt="xl" shadow="sm" p="lg" radius="md">
-        <Title order={4} mb="md">Debug Info</Title>
-        <Text size="sm">User: {user?.username}</Text>
-        <Text size="sm">Total Transactions: {stats.recentTransactions.length}</Text>
-        <Button mt="md" size="xs" onClick={() => console.log('Stats:', stats)}>
-          Log Stats to Console
-        </Button>
-      </Card> */}
     </div>
   );
 };
