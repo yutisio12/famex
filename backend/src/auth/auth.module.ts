@@ -12,11 +12,13 @@ import { EncryptionService } from 'src/utils/encryption.service';
 import { Expense } from '../entities/expense.expense.entity';
 import { MasterExpendCat } from '../entities/master.master-expend-cat-entity';
 import { Log } from 'src/entities/log.log.entity';
+import { TwoFaModule } from './2fa/twofa.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Expense, MasterExpendCat, Log], 'authConnection'),
     PassportModule,
+    TwoFaModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

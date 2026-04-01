@@ -21,6 +21,9 @@ export class User {
   @Column({ type: 'int4', nullable: true, default: 1 })
   status_active: number;
 
+  @Column({ nullable: true })
+  auth_key: string;
+
   @Column({ type: 'jsonb', nullable: true, default: null })
   face_id: number[];
 
