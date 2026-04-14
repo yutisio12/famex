@@ -33,14 +33,14 @@ export class TwoFaController {
 
     const encrypted = this.twoFaService.encryptSecret(body.secret);
 
-    // 👉 simpan ke DB (TypeORM)
+    // 👉 simpan ke DB (TypeORM) soon
     // await this.userRepo.update(body.userId, {
     //   twoFactorSecret: encrypted,
     //   twoFactorEnabled: true,
     // });
 
     return {
-      message: '2FA enabled',
+      message: '2FA is enabled',
     };
   }
 
@@ -63,11 +63,11 @@ export class TwoFaController {
     );
 
     if (!isValid) {
-      throw new UnauthorizedException('Invalid TOTP');
+      throw new UnauthorizedException('Invalid TOTP!');
     }
 
     return {
-      message: 'Login success',
+      message: 'Login success!',
     };
   }
 
