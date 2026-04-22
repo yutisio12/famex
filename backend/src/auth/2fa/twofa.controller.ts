@@ -40,7 +40,7 @@ export class TwoFaController {
     // });
 
     return {
-      message: '2FA is enabled',
+      message: '2FA is enabled!',
     };
   }
 
