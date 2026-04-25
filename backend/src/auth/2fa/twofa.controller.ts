@@ -28,7 +28,7 @@ export class TwoFaController {
   ){
     const isValid = this.twoFaService.verifyToken(body.token, body.secret)
     if(!isValid){
-      throw new UnauthorizedException('Invalid TOTP');
+      throw new UnauthorizedException('Invalid TOTP!');
     }
 
     const encrypted = this.twoFaService.encryptSecret(body.secret);
@@ -67,7 +67,7 @@ export class TwoFaController {
     }
 
     return {
-      message: 'Login success!',
+      message: 'Login successfully!',
     };
   }
 
