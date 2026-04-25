@@ -16,7 +16,7 @@ export class AuthController{
   constructor(private authService: AuthService){}
 
   @Post('login')
-  @Throttle({ global: { limit: 5, ttl: 60000 } })
+  @Throttle({ global: { limit: 10, ttl: 60000 } })
   @ApiOperation({ summary: 'Login User' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   async login(
