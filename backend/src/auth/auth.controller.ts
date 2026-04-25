@@ -17,7 +17,7 @@ export class AuthController{
 
   @Post('login')
   @Throttle({ global: { limit: 5, ttl: 60000 } })
-  @ApiOperation({ summary: 'User login' })
+  @ApiOperation({ summary: 'Login User' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   async login(
     @Body() loginDto: LoginDto,
@@ -28,7 +28,7 @@ export class AuthController{
     if(!user){
       return response.status(HttpStatus.UNAUTHORIZED).json({
         statusCode: HttpStatus.UNAUTHORIZED,
-        message: 'Invalid credentials'
+        message: 'Invalid Credentials!'
       })
     }
 
