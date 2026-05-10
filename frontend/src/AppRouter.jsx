@@ -10,7 +10,7 @@ import Admin from './pages/Admin';
 import Layout from './components/layout/Layout';
 
 function AppRouter() {
-  const { user, loading } = useAuth();
+  const { user, role, loading } = useAuth();
 
   if (loading) {
     return (
@@ -26,7 +26,6 @@ function AppRouter() {
     );
   }
 
-  // Protected Layout Component
   const ProtectedLayout = () => {
     if (!user) {
       return <Navigate to="/login" replace />;
@@ -36,6 +35,13 @@ function AppRouter() {
         <Outlet />
       </Layout>
     );
+  };
+
+  const AdminRoute = ({ children }) => {
+    if (role !== 1) {
+      return <Navigate to="/dashboard" replace />;
+    }
+    return children;
   };
 
   return (
@@ -51,7 +57,7 @@ function AppRouter() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="expenses" element={<Expenses />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="admin/user" element={<Admin />} />
+          <Route path="admin/user" element={<AdminRoute><Admin /></AdminRoute>} />
         </Route>
 
         <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
