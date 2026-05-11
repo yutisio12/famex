@@ -12,6 +12,7 @@ import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class ExpenseService {
+  private static readonly ALLOWED_SORT_COLUMNS = ['id', 'amount', 'description', 'expense_date', 'created_at'];
 
   constructor(
     @InjectRepository(MasterExpendCat, 'authConnection')
@@ -28,48 +29,29 @@ export class ExpenseService {
 
   async create(idUser: number, createExpenseDto: CreateExpenseDto[]): Promise<any> {
     try {
-      console.log('Received user ID:', idUser);
-      console.log('Received DTO data:', JSON.stringify(createExpenseDto, null, 2));
-
       const formData = createExpenseDto.map(value => ({
         ...value,
         user_id: idUser
       }));
-      console.log('Formatted data to save:', JSON.stringify(formData, null, 2));
 
-      // Create the expense entities
       const newExpense = this.expenseRepository.create(formData);
-      console.log('Created expense entities:', JSON.stringify(newExpense, null, 2));
-
-      // Save to database
-      console.log('Attempting to save to database...');
       const savedExpense = await this.expenseRepository.save(newExpense);
-      console.log('Successfully saved expense:', JSON.stringify(savedExpense, null, 2));
-      
+
       return {
         success: true,
         data: savedExpense
       };
     } catch (error) {
-      console.error('Detailed error:', {
-        message: error.message,
-        code: error.code,
-        detail: error.detail,
-        parameters: error.parameters,
-        stack: error.stack
-      });
-
       if (error.code === '23503') {
         throw new BadRequestException('Invalid category_id or user_id reference');
       }
-      throw new BadRequestException(`Failed to insert data: ${error.message}`);
+      throw new BadRequestException('Failed to insert data');
     }
   }
 
   // findAll() {
   async findAll(query: PaginationQueryDto, customWhere?: Record<string, any>) {
     const {page, limit, sort, search} = query
-    const where: any = {}
 
     const datadb = this.expenseRepository.createQueryBuilder('expenses')
     datadb.leftJoinAndSelect('expenses.category', 'category');
@@ -79,7 +61,6 @@ export class ExpenseService {
     }
     if (customWhere) {
       Object.keys(customWhere).forEach((key) => {
-        // Kalau value array, pakai IN
         if (Array.isArray(customWhere[key])) {
           datadb.andWhere(`expenses.${key} IN (:...${key})`, { [key]: customWhere[key] });
         } else {
@@ -89,10 +70,9 @@ export class ExpenseService {
     }
     if(sort && sort !== null){
       let [sortBy, sortType] = sort.split(',')
-      if(sortBy == 'id'){
-        sortBy = 'expenses_id'
-      }
-      datadb.orderBy(`${sortBy}`, sortType.toUpperCase() === 'DESC' ? 'DESC' : 'ASC')
+      const safeSort = ExpenseService.ALLOWED_SORT_COLUMNS.includes(sortBy) ? sortBy : 'id';
+      const safeSortKey = safeSort === 'id' ? 'expenses_id' : `expenses_${safeSort}`;
+      datadb.orderBy(safeSortKey, sortType.toUpperCase() === 'DESC' ? 'DESC' : 'ASC')
     }
     datadb.skip((page - 1) * limit).take(limit);
     const [data, total] = await datadb.getManyAndCount()
@@ -101,7 +81,11 @@ export class ExpenseService {
   }
 
   findOne(id: number) {
-    return `This action returns a #id expense`;
+    return `This action returns a #${id} expense`;
+  }
+
+  async findOneRaw(id: number) {
+    return this.expenseRepository.findOne({ where: { id } });
   }
 
   async findByUser(id: number) {
