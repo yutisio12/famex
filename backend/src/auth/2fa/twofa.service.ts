@@ -1,11 +1,18 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import * as QRCode from "qrcode";
 import * as CryptoJS from 'crypto-js';
 import { authenticator } from 'otplib';
 
 @Injectable()
 export class TwoFaService {
-  constructor() {
+  private readonly encryptionKey: string;
+
+  constructor(private configService: ConfigService) {
+    this.encryptionKey = this.configService.get<string>('ENCRYPTION_KEY')
+      ?? this.configService.get<string>('AES_SECRET_KEY')
+      ?? '';
+
     authenticator.options = {
       step: 45,
       window: 1,
@@ -28,15 +35,15 @@ export class TwoFaService {
 
   encryptSecret(secret: string){
     return CryptoJS.AES.encrypt(
-      secret, 
-      process.env.ENCRYPTION_KEY || 'superSecretKey'
+      secret,
+      this.encryptionKey
     ).toString();
   }
 
   decryptSecret(secret: string){
     return CryptoJS.AES.decrypt(
-      secret, 
-      process.env.ENCRYPTION_KEY || 'superSecretKey'
+      secret,
+      this.encryptionKey
     ).toString(CryptoJS.enc.Utf8);
   }
 
