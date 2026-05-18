@@ -25,15 +25,18 @@ import { EmployeeService } from './employee.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiCookieAuth } from "@nestjs/swagger";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/role.guard';
+import { Roles } from 'src/auth/decorators/roles-decorator';
 import { PaginationQueryDto } from 'src/pagination/pagination-query.dto';
 import type { Response } from 'express';
 import { plainToInstance } from 'class-transformer';
 
 @ApiTags('Employee')
-@ApiBearerAuth('access-token') // sesuai nama di main.ts
+@ApiBearerAuth('access-token')
 @ApiCookieAuth('access-token')
 @Controller('employee')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(1)
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
