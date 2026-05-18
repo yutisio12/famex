@@ -1,10 +1,12 @@
 import { Controller, Post, Body, Patch, Res, HttpStatus, UseGuards, Get, Req, NotFoundException, BadRequestException, Query } from "@nestjs/common";
-import type { Response, Request } from "express";
+import type { Response } from "express";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import { RolesGuard } from "./role.guard";
 import { LoginDto } from "./dto/login.dto";
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiCookieAuth, ApiBody } from "@nestjs/swagger";
+import { RegisterDto } from "./dto/register.dto";
+import { ChangePasswordDto } from "./dto/change-password.dto";
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { PaginationQueryDto } from 'src/pagination/pagination-query.dto';
 import { Not } from "typeorm";
 import { Throttle } from '@nestjs/throttler';
@@ -48,36 +50,16 @@ export class AuthController{
   }
 
   @Post('register')
-  @ApiOperation({ summary: 'Register new user' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(1)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Register new user (Admin only)' })
   @ApiResponse({ status: 201, description: 'User registered successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 409, description: 'Username or email already exists' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        username: {
-          type: 'string',
-          example: 'johndoe',
-          description: 'Username for login'
-        },
-        password: {
-          type: 'string',
-          example: 'password123',
-          description: 'Password for login',
-          minLength: 6
-        },
-        role: {
-          type: 'number',
-          example: 2,
-          description: 'User role (1: admin, 2: user)',
-          // required: false
-        }
-      },
-      required: ['username', 'password']
-    }
-  })
   async register(
-    @Body() registerDto: { username: string, password: string, name: string, role?: number },
+    @Body() registerDto: RegisterDto,
   ) {
     const checkUsername = await this.authService.findOneCustom({ username: registerDto.username });
     if(checkUsername){
@@ -92,7 +74,7 @@ export class AuthController{
   @Post('validate')
   @UseGuards(JwtAuthGuard)
   async validate( @Req() req ){
-    console.log(req)
+    return { valid: true, user: { id: req.user.id, username: req.user.username } };
   }
 
   @Post('logout')
@@ -121,22 +103,24 @@ export class AuthController{
   @Patch('update_profile')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async update_profile( @Req() req, @Body() updateDTO: { name: string, face_id?: number[], status_active?: number } ){
+  async update_profile( @Req() req, @Body() updateDTO: { name: string, face_id?: number[] } ){
     const profile = await this.authService.findOneCustom({id: req.user.id})
 
     if (!profile) {
       throw new NotFoundException('User not found');
     }
-    
+
     const updating = await this.authService.updateUserByUser(req.user.id, updateDTO)
 
     return updating
   }
 
   @Patch('update_user')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(1)
   @ApiResponse({ status: 200, description: 'User updated successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiBearerAuth()
   async update_user( @Body() updateDTO: { id: number, name: string, username?: string, face_id?: number[], status_active?: number } ){
     const profile = await this.authService.findOneCustom({id: updateDTO.id})
@@ -162,13 +146,13 @@ export class AuthController{
   @Patch('update_password')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async update_password( @Req() req, @Body() updateDTO: { current_password: string, new_password: string } ){
+  async update_password( @Req() req, @Body() updateDTO: ChangePasswordDto ){
     const profile = await this.authService.findOneCustom({id: req.user.id})
 
     if (!profile) {
       throw new NotFoundException('User not found');
     }
-    
+
     const updating = await this.authService.changePassword(req.user.id, updateDTO.current_password, updateDTO.new_password)
 
     return updating
