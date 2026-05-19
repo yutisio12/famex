@@ -19,10 +19,8 @@ const Layout = ({ children }) => {
 
     useEffect(() => {
       const media = window.matchMedia(`(max-width: ${breakpoint}px)`);
-
       const listener = () => setIsMobile(media.matches);
       media.addEventListener("change", listener);
-
       return () => media.removeEventListener("change", listener);
     }, [breakpoint]);
 
@@ -32,8 +30,8 @@ const Layout = ({ children }) => {
   return (
     <AppShell
       navbar={<Navigation opened={opened} onClose={() => setOpened(false)} isMobile={useIsMobile()} />}
-      header={< Header opened={opened} onToggle={toggleNavigation} />}
-      footer={< Footer />}
+      header={<Header opened={opened} onToggle={toggleNavigation} />}
+      footer={<Footer />}
       padding="md"
       style={{
         minHeight: '100vh',
@@ -41,11 +39,10 @@ const Layout = ({ children }) => {
         color: '#1F2937',
       }}
     >
-      {/* Children content */}
-      < div style={{ minHeight: 'calc(100vh - 100px)' }}>
+      <div style={{ minHeight: 'calc(100vh - 100px)' }}>
         {children}
-      </div >
-    </AppShell >
+      </div>
+    </AppShell>
   );
 };
 
