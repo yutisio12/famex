@@ -177,6 +177,8 @@ export class AuthService {
     return 'OK'
   }
 
+  private static readonly ALLOWED_SORT_COLUMNS = ['id', 'username', 'name', 'role'];
+
   async findAll(query: PaginationQueryDto, customWhere?: Record<string, any>) {
     const {page, limit, sort, search} = query
     const where: any = {}
@@ -193,7 +195,6 @@ export class AuthService {
     }
     if (customWhere) {
       Object.keys(customWhere).forEach((key) => {
-        // Kalau value array, pakai IN
         if (Array.isArray(customWhere[key])) {
           datadb.andWhere(`user.${key} IN (:...${key})`, { [key]: customWhere[key] });
         } else {
@@ -203,7 +204,8 @@ export class AuthService {
     }
     if(sort){
       const [sortBy, sortType] = sort.split(',')
-      datadb.orderBy(`${sortBy}`, sortType.toUpperCase() === 'DESC' ? 'DESC' : 'ASC')
+      const safeSort = AuthService.ALLOWED_SORT_COLUMNS.includes(sortBy) ? sortBy : 'id';
+      datadb.orderBy(`user.${safeSort}`, sortType.toUpperCase() === 'DESC' ? 'DESC' : 'ASC')
     }
     datadb.skip((page - 1) * limit).take(limit);
     let data = await datadb.getRawMany();

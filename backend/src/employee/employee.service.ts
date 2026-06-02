@@ -16,6 +16,7 @@ import { PaginationResponseDto } from 'src/pagination/pagination-response.dto';
 @Injectable()
 export class EmployeeService {
   private readonly logger = new Logger(EmployeeService.name);
+  private static readonly ALLOWED_SORT_COLUMNS = ['id', 'firstName', 'lastName', 'email', 'department', 'position', 'createdAt', 'updatedAt'];
 
   constructor(
     @InjectRepository(Employee, 'employeeConnection')
@@ -66,7 +67,6 @@ export class EmployeeService {
 
   async findAll(query: PaginationQueryDto) {
     const { page, limit, sort, search } = query;
-    const where: any = {};
 
     const datadb = this.employeeRepository.createQueryBuilder('employees');
     if(search){
@@ -75,7 +75,8 @@ export class EmployeeService {
 
     if(sort){
       const [sortField, sortOrder] = sort.split(',');
-      datadb.orderBy(`employees.${sortField}`, sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
+      const safeSort = EmployeeService.ALLOWED_SORT_COLUMNS.includes(sortField) ? sortField : 'id';
+      datadb.orderBy(`employees.${safeSort}`, sortOrder.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
     }
     datadb.skip((page - 1) * limit).take(limit);
     const [data, total] = await datadb.getManyAndCount();
