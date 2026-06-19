@@ -32,7 +32,7 @@ const LoginForm = () => {
 
     if (!result.success) {
       showNotification({
-        title: 'Login Failed',
+        title: 'Login Failed!',
         message: result.message,
         color: 'red',
       });
