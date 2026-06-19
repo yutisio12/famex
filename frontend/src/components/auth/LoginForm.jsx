@@ -191,7 +191,7 @@ const LoginForm = () => {
             margin: 0,
             fontWeight: '500'
           }}>
-            - Family Expense Management -
+            - Family Expense Management System -
           </p>
         </div>
 
