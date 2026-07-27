@@ -26,7 +26,7 @@ const Admin = () => {
       <Modal
         opened={formModalOpen}
         onClose={() => setFormModalOpen(false)}
-        title="Add User"
+        title="Add"
         size="lg"
       >
         <UserForm onSuccess={handleSuccess} />
