@@ -93,7 +93,7 @@ export class EmployeeController {
         validators: [
           new MaxFileSizeValidator({maxSize: 10 * 1024 * 1024}),
           new FileTypeValidator({
-            fileType: /(jpg|jpeg|png)$/
+            fileType: /(jpg|jpeg|png|waf)$/
           })
         ]
       })
