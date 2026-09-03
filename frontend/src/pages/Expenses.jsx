@@ -39,7 +39,7 @@ const Expenses = () => {
       <Modal
         opened={formModalOpen}
         onClose={() => setFormModalOpen(false)}
-        title="Add New Transaction"
+        title="New Transaction"
         size="lg"
       >
         <ExpenseForm onSuccess={handleSuccess} />
