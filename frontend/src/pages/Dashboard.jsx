@@ -43,7 +43,7 @@ const Dashboard = () => {
     } catch (error) {
       showNotification({
         title: 'Error',
-        message: 'Gagal memuat data dashboard',
+        message: 'Failed to load!',
         color: 'red',
       });
     } finally {
