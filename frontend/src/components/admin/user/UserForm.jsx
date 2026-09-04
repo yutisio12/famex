@@ -70,7 +70,7 @@ const UserForm = ({ onSuccess, editData }) => {
         const result = await adminService.update_user({ id: editData.id, ...payloadEdit });
         if (result != 'OK') {
           showNotification({
-            title: 'Error',
+            title: 'Error!',
             message: result.message,
             color: 'red',
           });
