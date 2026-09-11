@@ -213,7 +213,7 @@ export class EmployeeService {
       });
       return Buffer.from(await workbook.xlsx.writeBuffer())
     } catch (error) {
-      throw new BadRequestException('Failed to export to Excel: ' + error.message);
+      throw new BadRequestException('Failed to export: ' + error.message);
     }
   }
 
