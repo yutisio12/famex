@@ -26,7 +26,7 @@ const UserForm = ({ onSuccess, editData }) => {
     validate: {
       name: (value) => (value.length < 3 ? 'Nama too short' : null),
       username: (value) => (value.length < 3 ? 'Username too short' : null),
-      password: (value) => (value.length < 6 ? 'Password Min 6 characters' : null),
+      password: (value) => (value.length < 6 ? 'Password At Least have 6 characters' : null),
       role: (value) => (!value ? 'Select role' : null),
     },
   });
