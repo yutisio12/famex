@@ -118,7 +118,7 @@ const UserForm = ({ onSuccess, editData }) => {
     } catch (error) {
       showNotification({
         title: 'Error',
-        message: error.response.data.message || 'Something went wrong',
+        message: error.response.data.message || 'Something went wrong!',
         color: 'red',
       });
     }
