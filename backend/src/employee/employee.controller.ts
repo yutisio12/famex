@@ -46,7 +46,7 @@ export class EmployeeController {
     if(checkEmail){
       return {
         statusCode: HttpStatus.CONFLICT,
-        message: 'Email already exists, use another email!'
+        message: 'Email already exist, use another email!'
       }
     }
     return this.employeeService.create(createEmployeeDto);
