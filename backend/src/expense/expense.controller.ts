@@ -49,7 +49,7 @@ export class ExpenseController {
   @Get()
   @UseGuards(RolesGuard)
   @Roles(1)
-  @ApiOperation({ summary: 'Get all expenses (Admin only)' })
+  @ApiOperation({ summary: 'Get all expenses' })
   findAll(
     @Query() query: PaginationQueryDto,
   ) {
