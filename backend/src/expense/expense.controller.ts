@@ -34,7 +34,7 @@ export class ExpenseController {
   @ApiOperation({ summary: 'Create new expense' })
   @ApiResponse({
     status: 201,
-    description: 'The expense has been successfully created.',
+    description: 'Expense created successfully.',
     type: CreateExpenseDto,
     isArray: true
   })
