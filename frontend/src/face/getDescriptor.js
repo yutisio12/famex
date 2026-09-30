@@ -15,7 +15,7 @@ export async function getFaceDescriptor(videoRef, isUpload = false) {
     .withFaceDescriptor();
 
   if (!detection) {
-    throw new Error('Face Not Detected by System');
+    throw new Error('Face Not Detected by System, Please try Again');
   }
 
   return Array.from(detection.descriptor);
