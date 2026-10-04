@@ -41,7 +41,7 @@ import { UserThrottlerGuard } from './throttlers/user-throttler.guard';
       {
         name: 'user',
         ttl: 60000,
-        limit: 30,
+        limit: 35,
       },
     ]),
   ],
