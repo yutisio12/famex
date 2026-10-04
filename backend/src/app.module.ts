@@ -36,7 +36,7 @@ import { UserThrottlerGuard } from './throttlers/user-throttler.guard';
       {
         name: 'global',
         ttl: 60000,        // 60 detik
-        limit: 100,     // 100 request / menit per IP
+        limit: 150,     // 100 request / menit per IP
       },
       {
         name: 'user',
