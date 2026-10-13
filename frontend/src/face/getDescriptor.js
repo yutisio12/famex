@@ -7,7 +7,7 @@ export async function getFaceDescriptor(videoRef, isUpload = false) {
     .detectSingleFace(
       img,
       new faceapi.TinyFaceDetectorOptions({
-        inputSize: 160,
+        inputSize: 165,
         scoreThreshold: 0.5,
       })
     )
