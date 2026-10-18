@@ -43,7 +43,7 @@ export class ExpenseService {
       };
     } catch (error) {
       if (error.code === '23503') {
-        throw new BadRequestException('Invalid category_id or user_id reference');
+        throw new BadRequestException('Invalid reference');
       }
       throw new BadRequestException('Failed to insert data');
     }
