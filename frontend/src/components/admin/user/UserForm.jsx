@@ -24,7 +24,7 @@ const UserForm = ({ onSuccess, editData }) => {
       role: 2
     },
     validate: {
-      name: (value) => (value.length < 3 ? 'Nama too short' : null),
+      name: (value) => (value.length < 3 ? 'Name too short' : null),
       username: (value) => (value.length < 3 ? 'Username too short' : null),
       password: (value) => (value.length < 6 ? 'Password At Least have 6 characters' : null),
       role: (value) => (!value ? 'Select role' : null),
@@ -38,7 +38,7 @@ const UserForm = ({ onSuccess, editData }) => {
       role: 2
     },
     validate: {
-      name: (value) => (value.length < 3 ? 'Nama too short' : null),
+      name: (value) => (value.length < 3 ? 'Name too short' : null),
       username: (value) => (value.length < 3 ? 'Username too short' : null),
       role: (value) => (!value ? 'Select role' : null),
     },
